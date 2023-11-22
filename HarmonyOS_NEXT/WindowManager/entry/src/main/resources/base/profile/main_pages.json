@@ -1,8 +1,0 @@
-{
-  "src": [
-    "pages/LoginPage",
-    "pages/HomePage",
-    "pages/VerifyPage",
-    "pages/SuccessPage"
-  ]
-}
