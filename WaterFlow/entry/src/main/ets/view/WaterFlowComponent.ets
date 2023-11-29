@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 
-import ProductBean from '../common/bean/ProductBean';
-import { WaterFlowDataSource } from '../common/bean/WaterFlowDataSource';
+import ProductItem from '../viewmodel/ProductItem';
+import { WaterFlowDataSource } from '../viewmodel/WaterFlowDataSource';
 import { CommonConstants as Const } from '../common/constants/CommonConstants';
 import { waterFlowData } from '../viewmodel/HomeViewModel';
 import FlowItemComponent from '../view/FlowItemComponent';
@@ -34,11 +34,11 @@ export default struct WaterFlowComponent {
 
   build() {
     WaterFlow({ footer: (): void => this.itemFoot() }) {
-      LazyForEach(this.datasource, (item: ProductBean) => {
+      LazyForEach(this.datasource, (item: ProductItem) => {
         FlowItem() {
           FlowItemComponent({ item: item })
         }
-      }, (item: ProductBean) => JSON.stringify(item))
+      }, (item: ProductItem) => JSON.stringify(item))
     }
     .layoutWeight(Const.WATER_FLOW_LAYOUT_WEIGHT)
     .layoutDirection(FlexDirection.Column)
