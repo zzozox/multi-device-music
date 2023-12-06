@@ -20,10 +20,11 @@ import HomeViewModel from '../viewmodel/HomeViewModel';
 import CommonConstants from '../common/constants/CommonConstants';
 import StyleConstants from '../common/constants/StyleConstants';
 import Logger from '../common/utils/Logger';
-import PreferencesUtil from '../common/database/Preferencesutil';
 import SettingData from '../viewmodel/SettingData';
+import dataPreferences from '@ohos.data.preferences';
 
 const TAG = '[HomePage]';
+const KEY_APP_FONT_SIZE = 'appFontSize';
 
 /**
  * The HomePage is the entry point of the application.
@@ -35,10 +36,11 @@ struct HomePage {
   @State changeFontSize: number = CommonConstants.SET_SIZE_NORMAL;
 
   onPageShow() {
-    PreferencesUtil.getChangeFontSize().then((value) => {
-      this.changeFontSize = value;
-      Logger.info(TAG, 'Get the value of changeFontSize: ' + this.changeFontSize);
-    });
+    dataPreferences.getPreferences(getContext(this), 'myStore').then((object: dataPreferences.Preferences) => {
+      object.get(KEY_APP_FONT_SIZE, 0).then((data) => {
+        this.changeFontSize = Number(data);
+      });
+    })
   }
 
   build() {

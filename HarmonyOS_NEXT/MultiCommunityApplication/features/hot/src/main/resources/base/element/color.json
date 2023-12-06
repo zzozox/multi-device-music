@@ -1,0 +1,36 @@
+{
+  "color": [
+    {
+      "name": "white",
+      "value": "#FFFFFF"
+    },
+    {
+      "name": "pink",
+      "value": "#1fff9a6e"
+    },
+    {
+      "name": "tab_selected",
+      "value": "#000000"
+    },
+    {
+      "name": "tab_normal",
+      "value": "#99000000"
+    },
+    {
+      "name": "water_flow_shadow_color",
+      "value": "#0d000000"
+    },
+    {
+      "name": "water_flow_bgc",
+      "value": "#0d000000"
+    },
+    {
+      "name": "acetate",
+      "value": "#00000000"
+    },
+    {
+      "name": "read_total_rank_color",
+      "value": "#66000000"
+    }
+  ]
+}

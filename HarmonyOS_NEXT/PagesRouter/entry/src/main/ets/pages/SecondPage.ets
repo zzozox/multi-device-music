@@ -16,6 +16,9 @@
 import router from '@ohos.router';
 import CommonConstants from '../common/constants/CommonConstants';
 
+class routerParams {
+  src:string = ''
+}
 /**
  * The SecondPage is the router push page.
  */
@@ -23,7 +26,8 @@ import CommonConstants from '../common/constants/CommonConstants';
 @Component
 struct SecondPage {
   @State message: string = CommonConstants.SECOND_MESSAGE;
-  @State src: string = (router.getParams() as Record<string, string>)[CommonConstants.SECOND_SRC_PARAM];
+  @State params: routerParams = router.getParams() as routerParams
+  @State src: string = this.params.src;
 
   build() {
     Row() {
