@@ -14,12 +14,13 @@
  */
 
 import webview from '@ohos.web.webview';
-import { CommonConstants } from '@ohos/common';
+import { BreakpointType, BreakpointTypeEnum, CommonConstants } from '@ohos/common';
 
 @Component
 export struct ActivityView {
-  @State activitySrc: string = 'https://developer.huawei.com/consumer/cn/hdc/hdc2023/ticket/101677813051874334/?ha_source=HDCminisite&ha_sourceId=89000360';
+  activitySrc: string = 'https://developer.huawei.com/consumer/cn/hdc/hdc2023/ticket/101677813051874334/?ha_source=HDCminisite&ha_sourceId=89000360';
   @Link webViewController: WebviewController;
+  @StorageProp('currentBreakpoint') currentBreakpoint: string = BreakpointTypeEnum.MD;
 
   aboutToAppear() {
     this.webViewController = new webview.WebviewController();
@@ -31,11 +32,17 @@ export struct ActivityView {
         .fileAccess(true)
         .mixedMode(MixedMode.All)
         .cacheMode(CacheMode.None)
+        .width(new BreakpointType({
+          sm: CommonConstants.FULL_PERCENT,
+          md: CommonConstants.PERCENT_70,
+          lg: CommonConstants.PERCENT_64
+        }).getValue(this.currentBreakpoint))
         .javaScriptAccess(true)
         .domStorageAccess(true)
     }
     .padding({ top: AppStorage.get<number>('statusBarHeight') })
     .backgroundColor(Color.White)
+    .width(CommonConstants.FULL_PERCENT)
     .height(CommonConstants.FULL_PERCENT)
   }
 }

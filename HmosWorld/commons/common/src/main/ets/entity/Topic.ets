@@ -47,10 +47,11 @@ export class Topic {
    */
   isFollowed: boolean;
 
-  constructor() {
-    this.id = '';
-    this.name = '';
-    this.type = TopicType.TOPIC;
-    this.isFollowed = false;
+  constructor(topic: Topic) {
+    this.id = topic.id;
+    this.name = topic.name;
+    this.type = topic.type;
+    this.resourceType = topic.resourceType;
+    this.isFollowed = topic.isFollowed;
   }
 }

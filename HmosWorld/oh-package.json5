@@ -9,8 +9,8 @@
   "main": "",
   "version": "1.0.0",
   "dependencies": {
-  "@hw-agconnect/cloud": "1.0.0",
-  "@hw-agconnect/hmcore": "1.0.0",
-  "long": "5.2.1"
+    "@hw-agconnect/cloud": "1.0.2",
+    "@hw-agconnect/hmcore": "1.0.2",
+    "long": "5.2.1"
   }
 }

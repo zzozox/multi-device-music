@@ -25,7 +25,6 @@ export struct AccountSelectView {
     Column() {
       List() {
         ForEach(ACCOUNT_LIST, (item: string, index?: number) => {
-          if (index !== undefined) {
             ListItem() {
               Column() {
                 Text(item)
@@ -61,9 +60,8 @@ export struct AccountSelectView {
                   })
                   .combine(TransitionEffect.translate({ y: Constants.ACCOUNT_LIST_TRANSLATE_Y }))
               )
-            }
           }
-        }, (item: string) => JSON.stringify(item))
+        })
       }
       .scrollBar(BarState.Off)
     }

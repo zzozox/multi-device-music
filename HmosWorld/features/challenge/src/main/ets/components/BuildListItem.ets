@@ -13,6 +13,7 @@
  * limitations under the License.
  */
 
+import { BreakpointType, BreakpointTypeEnum } from '@ohos/common';
 import ZonesItem from '../entity/ZonesItem';
 import { ChallengeConstants as Const } from '../constants/ChallengeConstants';
 
@@ -20,29 +21,42 @@ import { ChallengeConstants as Const } from '../constants/ChallengeConstants';
 export default struct BuildListItem {
   @Consume('introductionData') introductionData: ZonesItem;
   @Prop buildingImgRatio: number = 0;
+  @StorageProp('currentBreakpoint') currentBreakpoint: string = BreakpointTypeEnum.MD;
 
   build() {
     Column() {
       Image(this.introductionData.starLinePic[1])
-        .height($r('app.float.star_img_height'))
-        .aspectRatio(Const.STAR_IMG_ASPECT)
+        .width(new BreakpointType<Length>({
+          sm: Const.FULL_PERCENT,
+          md: Const.PERCENT_70,
+          lg: Const.PERCENT_47
+        }).getValue(this.currentBreakpoint))
         .margin({ bottom: $r('app.float.introduction_star_line_margin') })
       Text(this.introductionData.buildingInformation)
-        .width(Const.FULL_PERCENT)
+        .width(new BreakpointType<Length>({
+          sm: Const.PERCENT_86,
+          md: Const.PERCENT_93,
+          lg: Const.PERCENT_63
+        }).getValue(this.currentBreakpoint))
         .fontSize($r('app.float.font_size_normal'))
         .letterSpacing(0)
       Column() {
         Image(this.introductionData.buildingPic)
           .width(Const.FULL_PERCENT)
-          .height($r('app.float.building_img_truly_height'))
+          .aspectRatio(Const.BUILD_TOP_ASPECT_RATIO)
           .margin({ top: `${-this.buildingImgRatio * Const.BUILDING_COEFFICIENT}%` })
       }
-      .width(Const.FULL_PERCENT)
-      .height($r('app.float.building_img_height'))
+      .width(new BreakpointType<Length>({
+        sm: Const.FULL_PERCENT,
+        md: Const.PERCENT_70,
+        lg: Const.PERCENT_47
+      }).getValue(this.currentBreakpoint))
+      .aspectRatio(Const.BUILDING_ASPECT_RATIO)
       .borderRadius($r('app.float.introduction_image_border_radius'))
       .margin({ top: $r('app.float.introduction_image_margin') })
       .clip(true)
     }
-    .padding($r('app.float.guide_padding'))
+    .width(Const.FULL_PERCENT)
+    .padding({ top: $r('app.float.xxl_padding_margin'), bottom: $r('app.float.xxl_padding_margin') })
   }
 }

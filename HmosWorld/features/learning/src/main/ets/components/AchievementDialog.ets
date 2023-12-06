@@ -13,6 +13,7 @@
  * limitations under the License.
  */
 
+import { BreakpointType, BreakpointTypeEnum } from '@ohos/common';
 import { LearningConstants } from '../constants/LearningConstants';
 import { LearningPath } from '../entity/LearningPath';
 
@@ -20,6 +21,7 @@ import { LearningPath } from '../entity/LearningPath';
 export struct AchievementDialog {
   controller?: CustomDialogController;
   @Link learningItem: LearningPath | null;
+  @StorageProp('currentBreakpoint') currentBreakpoint: string = BreakpointTypeEnum.MD;
 
   closeDialog(): void {
     this.controller?.close();
@@ -45,12 +47,7 @@ export struct AchievementDialog {
         Image(this.learningItem?.achieveImg)
           .margin({ top: $r('app.float.achieve_margin_top') })
           .zIndex(LearningConstants.ACHIEVEMENT_Z_INDEX)
-          .height($r('app.float.achieve_img_size'))
           .width($r('app.float.achieve_img_size'))
-        Image($r('app.media.ic_achieve_bg'))
-          .margin({ top: $r('app.float.achieve_img_margin_top') })
-          .objectFit(ImageFit.Fill)
-          .width(LearningConstants.FULL_PERCENT)
           .aspectRatio(LearningConstants.ACHIEVEMENT_ASPECT_RATIO)
         Column() {
           Text($r('app.string.welcome_to_unlock', this.learningItem?.title))
@@ -86,8 +83,12 @@ export struct AchievementDialog {
       .borderRadius($r('app.float.common_border_radius'))
       .layoutWeight(1)
     }
-    .height(LearningConstants.ACHIEVE_DIALOG_HEIGHT)
-    .width(LearningConstants.ACHIEVE_DIALOG_WIDTH)
+    .height($r('app.float.dialog_height'))
+    .width(new BreakpointType({
+      sm: $r('app.float.sm_dialog_width'),
+      md: $r('app.float.md_dialog_width'),
+      lg: $r('app.float.lg_dialog_width')
+    }).getValue(this.currentBreakpoint))
     .justifyContent(FlexAlign.Center)
   }
 }

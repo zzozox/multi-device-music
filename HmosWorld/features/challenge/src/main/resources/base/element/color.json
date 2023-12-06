@@ -43,6 +43,10 @@
     {
       "name": "train_interval",
       "value": "#99000000"
+    },
+    {
+      "name": "arrow_bg_white",
+      "value": "#19FFFFFF"
     }
   ]
 }

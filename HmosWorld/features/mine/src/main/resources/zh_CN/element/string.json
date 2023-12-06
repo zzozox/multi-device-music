@@ -75,6 +75,10 @@
     {
       "name": "failed_message",
       "value": "网络请求失败，请重试"
+    },
+    {
+      "name": "achieves_button",
+      "value": "知道啦"
     }
   ]
 }

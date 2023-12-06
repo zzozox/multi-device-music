@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import { ArticleSkeletonView, CommonConstants } from '@ohos/common';
+import { ArticleSkeletonView, BreakpointType, BreakpointTypeEnum, CommonConstants } from '@ohos/common';
 import Constants, { SkeletonData, SkeType } from '../constants/Constants';
 
 @Preview
@@ -21,6 +21,7 @@ import Constants, { SkeletonData, SkeType } from '../constants/Constants';
 export struct LoadingView {
   @State columnBgColor: Color = Color.Gray;
   @State listOpacity: number = 1;
+  @StorageProp('currentBreakpoint') currentBreakpoint: string = BreakpointTypeEnum.MD;
 
   startAnimation(): void {
     animateTo(CommonConstants.SKELETON_ANIMATION, () => {
@@ -29,14 +30,48 @@ export struct LoadingView {
   }
 
   build() {
-    Column({ space: Constants.MIDDLE_SPACE }) {
-      ForEach(SkeletonData, (item: SkeType) => {
-        ArticleSkeletonView({ isMine: item.isMine, isFeed: item.isFeed })
+    Row() {
+      List({ space: Constants.RESOURCE_LIST_SPACE }) {
+        ForEach(SkeletonData, (item: SkeType) => {
+          ListItem() {
+            ArticleSkeletonView({ isMine: item.isMine, isFeed: item.isFeed })
+          }
+        })
+      }
+      .padding({
+        left: new BreakpointType({
+          sm: $r('app.float.md_padding_margin'),
+          md: $r('app.float.xxl_padding_margin'),
+          lg: $r('app.float.xxl_padding_margin')
+        }).getValue(this.currentBreakpoint),
+        right: new BreakpointType<Length>({
+          sm: 0,
+          md: $r('app.float.md_padding_margin'),
+          lg: 0
+        }).getValue(this.currentBreakpoint)
       })
+      .lanes(new BreakpointType({ sm: 1, md: 2, lg: 1 }).getValue(this.currentBreakpoint))
+      .layoutWeight(1)
+      .scrollBar(BarState.Off)
+      .padding({
+        left: new BreakpointType({
+          sm: $r('app.float.md_padding_margin'),
+          md: $r('app.float.xxl_padding_margin'),
+          lg: $r('app.float.xxl_padding_margin')
+        }).getValue(this.currentBreakpoint),
+        right: new BreakpointType<Length>({
+          sm: 0,
+          md: $r('app.float.md_padding_margin'),
+          lg: 0
+        }).getValue(this.currentBreakpoint)
+      })
+
+      Row()
+        .layoutWeight(this.currentBreakpoint === BreakpointTypeEnum.LG ? 1 : 0)
+        .backgroundColor($r('app.color.skeleton_color_medium'))
     }
-    .padding({ left: $r('app.float.mine_page_padding'), right: $r('app.float.mine_page_padding') })
     .height(Constants.FULL_SCREEN)
-    .margin({ top: $r('app.float.regular_margin') })
+    .width(Constants.FULL_SCREEN)
     .opacity(this.listOpacity)
     .onAppear(() => {
       this.startAnimation();

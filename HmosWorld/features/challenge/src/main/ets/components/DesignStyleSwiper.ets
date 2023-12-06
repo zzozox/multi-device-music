@@ -14,6 +14,7 @@
  */
 
 import curves from '@ohos.curves';
+import { BreakpointType, BreakpointTypeEnum } from '@ohos/common';
 import ZonesItem from '../entity/ZonesItem';
 import { ChallengeConstants as Const } from '../constants/ChallengeConstants';
 import { ImageViewDialog } from './ImageViewDialog';
@@ -23,6 +24,7 @@ export default struct DesignStyleSwiper {
   @State currentIndex: number = Const.HALF_COUNT;
   @Consume('introductionData') introductionData: ZonesItem;
   @State isPresent: boolean = false;
+  @StorageProp('currentBreakpoint') currentBreakpoint: string = BreakpointTypeEnum.MD;
 
   @Builder
   PhotoBuilder() {
@@ -71,7 +73,13 @@ export default struct DesignStyleSwiper {
     } else if (tempOffset === Const.HALF_COUNT) {
       offsetX = -Const.IMAGE_x_OFFSET_MIN * offsetIndex;
     }
-    return offsetX;
+    let scale: number = 1;
+    if (this.currentBreakpoint === BreakpointTypeEnum.MD) {
+      scale = 1.2
+    } else if (this.currentBreakpoint === BreakpointTypeEnum.LG) {
+      scale = 1.5;
+    }
+    return offsetX * scale;
   }
 
   startAnimation(isLeft: boolean): void {
@@ -112,10 +120,14 @@ export default struct DesignStyleSwiper {
             });
           })
         }
-      }, (item: ResourceStr) => JSON.stringify(item))
+      })
     }
-    .width(Const.FULL_PERCENT)
-    .height($r('app.float.swiper_height'))
+    .width(new BreakpointType<Length>({
+      sm: Const.FULL_PERCENT,
+      md: Const.PERCENT_70,
+      lg: Const.PERCENT_47
+    }).getValue(this.currentBreakpoint))
+    .aspectRatio(1.48)
     .alignContent(Alignment.Center)
     .bindContentCover($$this.isPresent, this.PhotoBuilder, ModalTransition.NONE)
     .gesture(

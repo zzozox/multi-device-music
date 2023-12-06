@@ -13,9 +13,7 @@
  * limitations under the License.
  */
 
-import { ActionButtonView, CommonConstants, LearningResource, Logger } from '@ohos/common';
-
-const TAG = '[ArticleCardView]';
+import { ActionButtonView, CommonConstants, LearningResource, ArticleCardButtonView } from '@ohos/common';
 
 @Reusable
 @Component
@@ -61,19 +59,33 @@ export struct ArticleCardView {
             textWidth: $r('app.float.view_count_icon_width')
           })
 
-          ActionButtonView({
-            imgResource: this.isLiked ? $r('app.media.btn_good_on') : $r('app.media.btn_good_normal'),
+          ArticleCardButtonView({
+            clickAnimationPath: 'common/lottie/liked_lottie.json',
+            cancelAnimationPath: 'common/lottie/cancel_liked_lottie.json',
+            isClicked: this.isLiked,
             count: this.articleItem.likesCount,
-            textWidth: $r('app.float.like_icon_width')
+            articleId: this.articleItem.id,
+            textWidth: $r('app.float.like_icon_width'),
+            type: 'like',
+            onClicked: this.onLiked,
+            normalImage: $r('app.media.btn_good_normal'),
+            onImage: $r('app.media.btn_good_on')
           })
             .onClick(() => {
               this.onLiked?.();
             })
 
-          ActionButtonView({
-            imgResource: this.isCollected ? $r('app.media.btn_favorites_on') : $r('app.media.btn_favorites_normal'),
+          ArticleCardButtonView({
+            clickAnimationPath: 'common/lottie/collected_lottie.json',
+            cancelAnimationPath: 'common/lottie/cancel_collect_lottie.json',
+            isClicked: this.isCollected,
             count: this.articleItem.collectionCount,
-            textWidth: $r('app.float.star_icon_width')
+            articleId: this.articleItem.id,
+            textWidth: $r('app.float.star_icon_width'),
+            type: 'collect',
+            onClicked: this.onCollected,
+            normalImage: $r('app.media.btn_favorites_normal'),
+            onImage: $r('app.media.btn_favorites_on')
           })
             .onClick(() => {
               this.onCollected?.();

@@ -119,6 +119,18 @@
           ]
         }
       ]
+    },
+    {
+      "name": "imageEdit",
+      "srcPath": "./features/imageEdit",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
     }
   ]
 }

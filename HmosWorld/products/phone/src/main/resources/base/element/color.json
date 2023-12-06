@@ -14,7 +14,7 @@
     },
     {
       "name": "theme_blue_color",
-      "value": "#0A59F0"
+      "value": "#0A59F7"
     },
     {
       "name": "tab_bar_color",
@@ -47,6 +47,30 @@
     {
       "name": "hmos_light_white",
       "value": "#F1F3F5"
+    },
+    {
+      "name": "grey_text_color",
+      "value": "#99000000"
+    },
+    {
+      "name": "permission_text_color",
+      "value": "#E5000000"
+    },
+    {
+      "name": "safe_cancel_button_bg",
+      "value": "#0D000000"
+    },
+    {
+      "name": "back_color",
+      "value": "#111111"
+    },
+    {
+      "name": "font_color",
+      "value": "#317AF7"
+    },
+    {
+      "name": "arrow_bg_white",
+      "value": "#19FFFFFF"
     }
   ]
 }

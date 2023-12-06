@@ -15,20 +15,79 @@
 
 import router from '@ohos.router';
 import common from '@ohos.app.ability.common';
-import { FailureLayout, LoadingLayout, LoadingStatus, Topic } from '@ohos/common';
-import { ThemeConstants } from '../constants/ThemeConstants';
-import { TopicItem } from '../components/TopicItemView';
-import { TopicModel } from '../model/TopicModel';
+import promptAction from '@ohos.promptAction';
 import preferences from '@ohos.data.preferences';
+import { BusinessError } from '@ohos.base';
+import {
+  BreakpointSystem,
+  BreakpointType,
+  BreakpointTypeEnum,
+  FailureLayout,
+  LoadingLayout,
+  LoadingStatus,
+  ObservedArray,
+  Topic,
+  TopicType,
+  WindowUtil
+} from '@ohos/common';
+import { ThemeConstants } from '../constants/ThemeConstants';
+import { TopicItemView } from '../components/TopicItemView';
+import { TopicModel } from '../model/TopicModel';
 
 @Entry
 @Component
 struct ThemeSettingPage {
   @State topicModel: TopicModel = TopicModel.getInstance();
   @State firstTopic: boolean = !!((router.getParams()) as Record<string, boolean>)?.['firstTopic'];
+  @State totalTopics: ObservedArray<Topic> = this.topicModel.totalTopicList;
+  @State selectedTopics: ObservedArray<Topic> = [];
+  @State loadingStatus: LoadingStatus = LoadingStatus.OFF;
+  @StorageProp('currentBreakpoint') currentBreakpoint: string = BreakpointTypeEnum.MD;
+  private breakpointSystem: BreakpointSystem = new BreakpointSystem();
+
+  aboutToAppear() {
+    this.loadTopics();
+    this.breakpointSystem.register();
+  }
+
+  loadTopics(): void {
+    this.loadingStatus = LoadingStatus.LOADING;
+    this.topicModel.getTopics().then(() => {
+      this.selectedTopics = this.topicModel.totalTopicList.filter(topic => topic.isFollowed);
+      this.loadingStatus = LoadingStatus.SUCCESS;
+    }).catch((err: Error) => this.loadingStatus = LoadingStatus.FAILED);
+  }
+
+  aboutToDisappear() {
+    this.breakpointSystem.unregister();
+  }
 
   onPageShow() {
-    this.topicModel.getTopics();
+    WindowUtil.updateStatusBarColor(getContext(this), true);
+  }
+
+  onPageHide() {
+    WindowUtil.updateStatusBarColor(getContext(this), false);
+  }
+
+  handleClickTopicItem(item: Topic): void {
+    const index = this.selectedTopics.findIndex(topic => topic.id === item.id && topic.type === item.type);
+    if (index !== -1) {
+      this.selectedTopics.splice(index, 1);
+    } else {
+      this.selectedTopics.push(new Topic(item));
+    }
+  }
+
+  isButtonEnabled() {
+    return this.selectedTopics.filter(topic => topic.type === TopicType.FEED).length !== 0
+      && this.selectedTopics.filter(topic => topic.type === TopicType.TOPIC).length !== 0;
+  }
+
+  checkTopicChanged() {
+    const initialSelectedTopics = this.totalTopics.filter(topic => topic.isFollowed);
+    return !(this.selectedTopics.length === initialSelectedTopics.length
+      && this.selectedTopics.every(selectedTopic => initialSelectedTopics.find(topic => topic.id === selectedTopic.id)));
   }
 
   @Builder
@@ -47,6 +106,7 @@ struct ThemeSettingPage {
       Column() {
         Text($r('app.string.preference_title'))
           .fontFamily($r('app.string.topic_title_main_family'))
+          .fontWeight(FontWeight.Medium)
           .fontColor($r('app.color.title_color'))
           .fontSize($r('app.float.topic_main_font'))
         Text($r('app.string.preference_subtitle'))
@@ -57,27 +117,29 @@ struct ThemeSettingPage {
           .margin({ top: $r('app.float.topic_title_margin') })
       }
       .padding({ left: this.firstTopic ? 0 : $r('app.float.topic_title_padding') })
+      .height($r('app.float.topic_navigation_height'))
+      .justifyContent(FlexAlign.Center)
       .alignItems(HorizontalAlign.Start)
-      .width(ThemeConstants.FULL_SIZE)
     }
+    .width(ThemeConstants.FULL_SIZE)
     .padding({
-      bottom: $r('app.float.topic_icon_size'),
-      left: $r('app.float.topic_left_padding'),
+      left: $r('app.float.xxl_padding_margin'),
       top: AppStorage.get<number>('statusBarHeight')
     })
   }
 
   @Builder
-  TopicTypeBuilder(index: number) {
+  TopicTypeBuilder(type: TopicType) {
     Row() {
-      Text(index === 0 ? $r('app.string.feed') : $r('app.string.topic'))
+      Text(type === TopicType.FEED ? $r('app.string.feed') : $r('app.string.topic'))
         .fontFamily($r('app.string.topic_title_main_family'))
+        .fontWeight(FontWeight.Medium)
         .fontSize($r('app.float.topic_type_font'))
         .fontColor($r('app.color.title_color'))
     }
     .width(ThemeConstants.FULL_SIZE)
     .height($r('app.float.topic_back_size'))
-    .padding({ left: $r('app.float.topic_left_padding') })
+    .margin({ top: $r('app.float.xxl_padding_margin'), bottom: $r('app.float.lg_padding_margin') })
   }
 
   jump(): void {
@@ -89,61 +151,122 @@ struct ThemeSettingPage {
     }
     const bundleName = (getContext(this) as common.UIAbilityContext).applicationInfo.name;
     const url = `@bundle:${bundleName}/phone/ets/pages/MainPage`;
-    AppStorage.setOrCreate<boolean>('shouldUpdate', true);
-    AppStorage.setOrCreate('getHomeResource', false);
-    if (this.firstTopic) {
-      router.replaceUrl({ url, params: { currentIndex: 0 } });
-    } else {
-      router.back({ url, params: { currentIndex: 0 } });
+    // Check whether the topic is modified.If yes, send a network request. Otherwise, return to the previous page.
+    // If the interface is successfully invoked, the new resource list is obtained and routed to the exploration page.
+    // Otherwise, the route is not redirected and prompt failure information.
+    const shouldUpdate = this.checkTopicChanged();
+    if (shouldUpdate) {
+      this.topicModel.updateFollowedTopics(this.selectedTopics.map(topic => topic.id)).then(() => {
+        promptAction.showToast({
+          message: $r('app.string.topic_update_success')
+        });
+        AppStorage.setOrCreate('getHomeResource', true);
+        if (this.firstTopic) {
+          router.replaceUrl({ url });
+        } else {
+          router.back();
+        }
+      }).catch((err: BusinessError) => {
+        promptAction.showToast({
+          message: $r('app.string.topic_update_fail')
+        });
+      })
+    }
+    else {
+      if (this.firstTopic) {
+        router.replaceUrl({ url });
+      } else {
+        router.back();
+      }
     }
   }
 
   build() {
     Stack() {
       Image($r('app.media.ic_bg_theme'))
+        .objectFit(ImageFit.Fill)
         .width(ThemeConstants.FULL_SIZE)
         .height(ThemeConstants.FULL_SIZE)
       Column() {
         this.TitleBuilder()
-        if (this.topicModel.loadingStatus === LoadingStatus.LOADING) {
+        if (this.loadingStatus === LoadingStatus.LOADING) {
           LoadingLayout();
         }
-        if (this.topicModel.loadingStatus === LoadingStatus.FAILED) {
-          FailureLayout({ handleReload: () => this.topicModel.getTopics() })
+        if (this.loadingStatus === LoadingStatus.FAILED) {
+          FailureLayout({ handleReload: () => this.loadTopics() })
         }
-        if (this.topicModel.loadingStatus === LoadingStatus.SUCCESS) {
-          ForEach([0, 1], (index: number) => {
-            this.TopicTypeBuilder(index)
-            GridRow({ columns: ThemeConstants.GRID_ROW_COLUMNS,
-              gutter: { x: ThemeConstants.GRID_ROW_X, y: ThemeConstants.GRID_ROW_Y } }) {
-              ForEach(index === 0 ? this.topicModel.feedList : this.topicModel.topicList, (item: Topic) => {
-                GridCol() {
-                  TopicItem({ item })
+        if (this.loadingStatus === LoadingStatus.SUCCESS) {
+          Column() {
+            ForEach([TopicType.FEED, TopicType.TOPIC], (type: TopicType) => {
+              this.TopicTypeBuilder(type)
+              GridRow({
+                columns: {
+                  sm: ThemeConstants.COLUMNS_SM,
+                  md: ThemeConstants.COLUMNS_MD,
+                  lg: ThemeConstants.COLUMNS_LG
+                },
+                gutter: {
+                  x: { sm: ThemeConstants.GUTTER_12, md: ThemeConstants.GUTTER_40, lg: ThemeConstants.GUTTER_40 },
+                  y: { sm: ThemeConstants.GUTTER_30, md: ThemeConstants.GUTTER_40, lg: ThemeConstants.GUTTER_40 }
                 }
+              }) {
+                ForEach(this.totalTopics.filter(topic => topic.type === type), (item: Topic) => {
+                  GridCol() {
+                    TopicItemView({
+                      item,
+                      handleClick: () => this.handleClickTopicItem(item)
+                    })
+                  }
+                }, (item: Topic) => item.id)
+              }
+              .padding({
+                left: new BreakpointType<Length>({
+                  sm: 0,
+                  md: $r('app.float.lg_padding_margin'),
+                  lg: $r('app.float.xl_padding_margin')
+                }).getValue(this.currentBreakpoint),
+                right: new BreakpointType<Length>({
+                  sm: 0,
+                  md: $r('app.float.lg_padding_margin'),
+                  lg: $r('app.float.xl_padding_margin')
+                }).getValue(this.currentBreakpoint),
+                bottom: $r('app.float.xxl_padding_margin')
               })
-            }
-            .padding({
-              top: $r('app.float.topic_icon_size'),
-              bottom: $r('app.float.topic_bottom_padding')
-            })
+            }, (item: number) => item.toString())
+          }
+          .margin({
+            left: new BreakpointType<Length>({
+              sm: $r('app.float.xxl_padding_margin'),
+              md: $r('app.float.xxl_padding_margin'),
+              lg: ThemeConstants.PERCENT_13
+            }).getValue(this.currentBreakpoint),
+            right: new BreakpointType<Length>({
+              sm: $r('app.float.xxl_padding_margin'),
+              md: $r('app.float.xxl_padding_margin'),
+              lg: ThemeConstants.PERCENT_13
+            }).getValue(this.currentBreakpoint)
           })
+
           Blank()
           Button($r('app.string.complete'), {
             type: ButtonType.Capsule,
-            stateEffect: this.topicModel.followCheck
+            stateEffect: this.isButtonEnabled()
           })
-            .width($r('app.float.button_width'))
+            .width(new BreakpointType({
+              sm: ThemeConstants.HALF_PERCENT,
+              md: ThemeConstants.BUTTON_LG,
+              lg: ThemeConstants.BUTTON_LG
+            }).getValue(this.currentBreakpoint))
             .height($r('app.float.ListItemGroup_padding'))
             .backgroundColor($r('app.color.btn_bg'))
-            .borderRadius($r('app.float.topic_icon_size'))
-            .enabled(this.topicModel.followCheck)
+            .borderRadius(ThemeConstants.HALF_PERCENT)
+            .enabled(this.isButtonEnabled())
             .onClick(() => this.jump())
             .margin($r('app.float.topic_back_size'))
         }
       }
       .width(ThemeConstants.FULL_SIZE)
       .height(ThemeConstants.FULL_SIZE)
-      .zIndex(ThemeConstants.Z_INDEX_TWO)
     }
   }
 }

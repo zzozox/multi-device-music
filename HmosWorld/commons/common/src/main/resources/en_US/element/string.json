@@ -27,6 +27,14 @@
     {
       "name": "failed_message",
       "value": "network failed, please reload"
+    },
+    {
+      "name": "like",
+      "value": "Like"
+    },
+    {
+      "name": "collect",
+      "value": "Collect"
     }
   ]
 }

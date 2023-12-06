@@ -74,6 +74,10 @@
     {
       "name": "failed_message",
       "value": "network failed, please reload"
+    },
+    {
+      "name": "achieves_button",
+      "value": "I got it"
     }
   ]
 }

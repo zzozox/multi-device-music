@@ -14,24 +14,23 @@
  */
 
 export class AppConstants {
-
   /**
    * 100 percent.
    */
   static readonly FULL_PERCENT: string = '100%';
-
   /**
    * 20 percent.
    */
-  static readonly TAB_PERCENT: string = '20%';
-
+  static readonly TAB_PERCENT: string = '15%';
   /**
    * Tab bar font weight.
    */
   static readonly TAB_FONT_WEIGHT: number = 600;
-
   /**
    * Default status height
    */
   static readonly DEFAULT_STATUS_HEIGHT: number = 32;
+  static readonly PHONE_WIDTH: number = 360;
+  static readonly FOLD_WIDTH: number = 468;
+  static readonly PAD_WIDTH: number = 496;
 }

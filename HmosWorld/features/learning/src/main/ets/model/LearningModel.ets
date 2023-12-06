@@ -114,24 +114,6 @@ export class LearningModel {
 
 const DEFAULT_PATHS: LearningPath[] = [
   new LearningPath(
-    'p007',
-    '从网络获取数据',
-    'https://developer.huawei.com/consumer/cn/training/course/slightMooc/C101667364948559963?ha_linker=eyJ0cyI6MTY4OTMxNTA3MTU3NSwiaWQiOiIyNDRkNGQzNmFiODExM2IxMTI1YjBhNGNjZDM4YmE3OCJ9',
-    '学习如何访问网络，来构建一个可以从网络实时获取数据的应用。',
-    $r('app.media.ic_achieve_7'),
-    $r('app.media.ic_learning_7'),
-    false
-  ),
-  new LearningPath(
-    'p008',
-    '保存应用数据',
-    'https://developer.huawei.com/consumer/cn/training/course/slightMooc/C101667367018821971?ha_linker=eyJ0cyI6MTY4OTMxNTA4MDAyMiwiaWQiOiIyNDRkNGQzNmFiODExM2IxMTI1YjBhNGNjZDM4YmE3OCJ9',
-    '存储应用的一些常用配置，以便应用获得更快的数据存取速度。',
-    $r('app.media.ic_achieve_8'),
-    $r('app.media.ic_learning_8'),
-    false
-  ),
-  new LearningPath(
     'p001',
     '运行Hello World',
     'https://developer.huawei.com/consumer/cn/training/course/slightMooc/C101667303102887820?ha_linker=eyJ0cyI6MTY4OTMxNDg3Njk4NiwiaWQiOiIyNDRkNGQzNmFiODExM2IxMTI1YjBhNGNjZDM4YmE3OCJ9',
@@ -183,6 +165,24 @@ const DEFAULT_PATHS: LearningPath[] = [
     '声明式UI框架，它使用极简的UI信息语法、丰富的UI动效组件和API、以及实时界面预览工具，帮助提升应用界面开发的效率。',
     $r('app.media.ic_achieve_6'),
     $r('app.media.ic_learning_6'),
+    false
+  ),
+  new LearningPath(
+    'p007',
+    '从网络获取数据',
+    'https://developer.huawei.com/consumer/cn/training/course/slightMooc/C101667364948559963?ha_linker=eyJ0cyI6MTY4OTMxNTA3MTU3NSwiaWQiOiIyNDRkNGQzNmFiODExM2IxMTI1YjBhNGNjZDM4YmE3OCJ9',
+    '学习如何访问网络，来构建一个可以从网络实时获取数据的应用。',
+    $r('app.media.ic_achieve_7'),
+    $r('app.media.ic_learning_7'),
+    false
+  ),
+  new LearningPath(
+    'p008',
+    '保存应用数据',
+    'https://developer.huawei.com/consumer/cn/training/course/slightMooc/C101667367018821971?ha_linker=eyJ0cyI6MTY4OTMxNTA4MDAyMiwiaWQiOiIyNDRkNGQzNmFiODExM2IxMTI1YjBhNGNjZDM4YmE3OCJ9',
+    '存储应用的一些常用配置，以便应用获得更快的数据存取速度。',
+    $r('app.media.ic_achieve_8'),
+    $r('app.media.ic_learning_8'),
     false
   )
 ];

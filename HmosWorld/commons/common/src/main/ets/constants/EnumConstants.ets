@@ -20,6 +20,12 @@ export enum LoadingStatus {
   FAILED = 'failed'
 }
 
+export enum WebpageStatus {
+  INIT = 'init',
+  ERROR = 'error',
+  FINISHED = 'finished'
+}
+
 export enum ResourcesType {
   FEED = 'feed',
   ARTICLE = 'article',

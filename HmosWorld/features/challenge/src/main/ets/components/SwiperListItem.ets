@@ -13,6 +13,7 @@
  * limitations under the License.
  */
 
+import { BreakpointTypeEnum } from '@ohos/common';
 import ZonesItem from '../entity/ZonesItem';
 import { ChallengeConstants as Const } from '../constants/ChallengeConstants';
 import ZonesModel from '../model/ZonesModel';
@@ -25,6 +26,7 @@ export default struct SwiperListItem {
   @Prop currentZoneId: number = 0;
   @Prop arrowIconOpacity: number = 0;
   @Consume('introductionData') introductionData: ZonesItem;
+  @StorageProp('currentBreakpoint') currentBreakpoint: string = BreakpointTypeEnum.MD;
 
   /**
    *  Get the introduction by currentZoneId.
@@ -41,11 +43,18 @@ export default struct SwiperListItem {
             .width(Const.FULL_PERCENT)
             .height(this.imageHeight)
             .objectFit(ImageFit.Cover)
-        }, (item: ZonesItem) => JSON.stringify(item))
+        }, (item: ZonesItem) => item.id.toString())
       }
       .index(this.currentZoneId)
-      .indicator(this.arrowIconOpacity > MAX_OPACITY ? Indicator.dot()
+      .indicator((this.arrowIconOpacity > MAX_OPACITY && this.currentBreakpoint !== BreakpointTypeEnum.LG) ? Indicator
+        .dot()
         .bottom($r('app.float.swiper_indicator_margin_bottom')) : false)
+      .displayArrow((this.arrowIconOpacity > MAX_OPACITY && this.currentBreakpoint === BreakpointTypeEnum.LG) ? {
+        showBackground: true,
+        isSidebarMiddle: true,
+        arrowColor: $r('app.color.white'),
+        backgroundColor: $r('app.color.arrow_bg_white')
+      } : false)
       .loop(true)
       .cachedCount(Const.IMAGE_SWIPER_CACHE_COUNT)
       .curve(Curve.EaseOut)

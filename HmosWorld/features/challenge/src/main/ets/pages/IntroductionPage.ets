@@ -15,7 +15,7 @@
 
 import router from '@ohos.router';
 import window from '@ohos.window';
-import { Logger } from '@ohos/common';
+import { BreakpointType, BreakpointTypeEnum, Logger, WindowUtil } from '@ohos/common';
 import ZonesItem from '../entity/ZonesItem';
 import { ChallengeConstants as Const } from '../constants/ChallengeConstants';
 import { ICON_SUBTITLE_ARRAY, IconSubtitle } from '../model/IconSubtitleData';
@@ -44,6 +44,7 @@ struct IntroductionPage {
   @Provide('introductionData') introductionData: ZonesItem = ZonesModel.getZonesList()[this.currentZoneId];
   @State topImgOffset: number = 0;
   @State locationImgScale: number = 0;
+  @StorageProp('currentBreakpoint') currentBreakpoint: string = BreakpointTypeEnum.MD;
 
   getRatios(): number[] {
     let ratio: number = 0;
@@ -53,6 +54,14 @@ struct IntroductionPage {
       arr.push(ratio);
     }
     return arr;
+  }
+
+  onPageShow() {
+    WindowUtil.updateStatusBarColor(getContext(this), true);
+  }
+
+  onPageHide() {
+    WindowUtil.updateStatusBarColor(getContext(this), false);
   }
 
   @Builder
@@ -85,14 +94,22 @@ struct IntroductionPage {
   @Builder
   StickyHeader() {
     Column() {
-      Image(this.introductionData.subPicBottom)
-        .width(Const.FULL_PERCENT)
-        .aspectRatio(Const.HEAD_IMG_ASPECT)
-        .objectFit(ImageFit.Fill)
-        .backgroundColor(this.introductionData.backgroundColor)
+      Column() {
+        Image(this.introductionData.subPicBottom)
+          .width(new BreakpointType<Length>({
+            sm: Const.FULL_PERCENT,
+            md: Const.PERCENT_70,
+            lg: Const.PERCENT_47
+          }).getValue(this.currentBreakpoint))
+          .aspectRatio(Const.HEAD_IMG_ASPECT)
+          .objectFit(ImageFit.Fill)
+      }
+      .width(Const.FULL_PERCENT)
+      .backgroundColor(this.introductionData.backgroundColor)
+      .margin({ top: $r('app.float.intro_margin_top') })
 
       Image(this.introductionData.titleIcon)
-        .margin({ top: $r('app.float.navigation_margin') })
+        .margin({ top: $r('app.float.xxl_padding_margin') })
         .width($r('app.float.introduction_title_icon_width'))
         .height($r('app.float.introduction_title_icon_height'))
       Stack() {
@@ -117,6 +134,11 @@ struct IntroductionPage {
                 imageHeight: this.imageHeight,
                 arrowIconOpacity: this.arrowIconOpacity,
                 currentZoneId: this.currentZoneId
+              })
+                .onVisibleAreaChange(this.getRatios(), (isVisible: boolean, currentRatio: number) => {
+                  if (this.currentBreakpoint===BreakpointTypeEnum.LG) {
+                    this.arrowIconOpacity = currentRatio;
+                  }
               })
             }
 
@@ -150,7 +172,6 @@ struct IntroductionPage {
                 })
               }
             }
-            .margin({ top: $r('app.float.intro_margin_top') })
           }
           .width(Const.FULL_PERCENT)
           .height(Const.FULL_PERCENT)
@@ -167,7 +188,10 @@ struct IntroductionPage {
           .height($r('app.float.page_icon_size'))
           .aspectRatio(1)
           .opacity(1 - this.arrowIconOpacity)
-          .margin({ bottom: $r('app.float.up_icon_margin_bottom'), left: $r('app.float.page_icon_margin_vertical') })
+          .position({
+            x: this.currentBreakpoint === BreakpointTypeEnum.LG ? Const.PERCENT_90 : Const.PERCENT_87,
+            y: Const.PERCENT_90
+          })
           .onClick(() => {
             this.scrollToTop();
           })
@@ -175,9 +199,9 @@ struct IntroductionPage {
           .height($r('app.float.page_icon_size'))
           .aspectRatio(1)
           .opacity(1 - this.arrowIconOpacity)
-          .margin({
-            right: $r('app.float.page_icon_margin_vertical'),
-            bottom: this.deviceHeight - Const.HOME_ICON_MARGIN_TOP
+          .position({
+            x: $r('app.float.xxl_padding_margin'),
+            y: Const.SM_MARGIN_PADDING + (AppStorage.get('statusBarHeight') as number || 0)
           })
           .onClick(() => router.back())
       }
@@ -192,7 +216,8 @@ struct IntroductionPage {
       let properties = data.getWindowProperties();
       this.deviceHeight = px2vp(properties.windowRect.height);
       this.imageHeight = this.deviceHeight;
-      this.imageMinHeight = Math.floor(px2vp(properties.windowRect.width) * Const.IMG_ASPECT_RATIO);
+      this.imageMinHeight = this.currentBreakpoint === BreakpointTypeEnum.LG ? this.deviceHeight :
+      Math.floor(px2vp(properties.windowRect.width) * Const.IMG_ASPECT_RATIO);
     });
   }
 

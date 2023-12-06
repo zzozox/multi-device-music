@@ -27,6 +27,8 @@ export { CommonUtil } from './src/main/ets/utils/CommonUtil';
 
 export { ObservedArray } from './src/main/ets/utils/ObservedArray';
 
+export { WindowUtil } from './src/main/ets/utils/WindowUtil';
+
 /*
  * component
  */
@@ -38,11 +40,15 @@ export { LoadingMoreLayout } from './src/main/ets/components/LoadingMoreLayout';
 
 export { ActionButtonView } from './src/main/ets/components/ActionButtonView';
 
+export { ArticleCardButtonView } from './src/main/ets/components/ArticleCardButtonView';
+
 export { NoMoreLayout } from './src/main/ets/components/NoMoreLayout';
 
 export { FeedSkeletonView } from './src/main/ets/components/skeleton/FeedSkeletonView';
 
 export { ArticleSkeletonView } from './src/main/ets/components/skeleton/ArticleSkeletonView';
+
+export { InteractiveAreaView } from './src/main/ets/components/InteractiveAreaView';
 
 /*
  * constant
@@ -51,7 +57,12 @@ export { splashImages } from './src/main/ets/constants/BackgroundImageConstants'
 
 export { CommonConstants } from './src/main/ets/constants/CommonConstants';
 
-export { LoadingStatus, ResourcesType, TagType, TopicType } from './src/main/ets/constants/EnumConstants';
+export {
+  LoadingStatus,
+  WebpageStatus,
+  ResourcesType,
+  TagType,
+  TopicType } from './src/main/ets/constants/EnumConstants';
 
 /*
  * data
@@ -85,4 +96,6 @@ export { UserData } from './src/main/ets/entity/UserData';
  * Request
  */
 export { default as AgcRequest } from './src/main/ets/service/datasource/network/agc/Request';
+
+export { BreakpointSystem, BreakpointType, BreakpointTypeEnum } from './src/main/ets/utils/BreakpointSystem';
 

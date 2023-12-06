@@ -36,7 +36,7 @@ export struct ViewedResourceView {
   }
 
   build() {
-    if (this.userModel.loadingViewedStatus === LoadingStatus.LOADING ) {
+    if (this.userModel.loadingViewedStatus === LoadingStatus.LOADING) {
       LoadingView()
     } else if (this.viewCounts === 0) {
       NoneContentView()

@@ -157,12 +157,12 @@
       "value": "2vp"
     },
     {
-      "name": "feed_card_padding",
-      "value": "6vp"
-    },
-    {
       "name": "feed_card_height",
       "value": "174vp"
+    },
+    {
+      "name": "view_count_height",
+      "value": "18vp"
     }
   ]
 }

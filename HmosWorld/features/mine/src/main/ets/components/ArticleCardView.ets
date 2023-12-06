@@ -13,9 +13,7 @@
  * limitations under the License.
  */
 
-import router from '@ohos.router';
-import common from '@ohos.app.ability.common';
-import { LearningResource, ActionButtonView, CommonConstants } from '@ohos/common';
+import { LearningResource, ActionButtonView, CommonConstants, ArticleCardButtonView } from '@ohos/common';
 
 @Component
 export struct ArticleCardView {
@@ -24,6 +22,8 @@ export struct ArticleCardView {
   @ObjectLink articleItem: LearningResource;
   onCollected?: () => void;
   onLiked?: () => void;
+  handleClick: () => void = () => {
+  };
 
   build() {
     Row({ space: CommonConstants.SPACE_16 }) {
@@ -55,23 +55,31 @@ export struct ArticleCardView {
             textWidth: $r('app.float.view_count_icon_width')
           })
 
-          ActionButtonView({
-            imgResource: this.isLiked ? $r('app.media.btn_good_on') : $r('app.media.btn_good_normal'),
+          ArticleCardButtonView({
+            clickAnimationPath: 'common/lottie/liked_lottie.json',
+            cancelAnimationPath: 'common/lottie/cancel_liked_lottie.json',
+            isClicked: this.isLiked,
             count: this.articleItem.likesCount,
-            textWidth: $r('app.float.like_icon_width')
+            articleId: this.articleItem.id,
+            textWidth: $r('app.float.like_icon_width'),
+            type: 'like',
+            onClicked: this.onLiked,
+            normalImage: $r('app.media.btn_good_normal'),
+            onImage: $r('app.media.btn_good_on')
           })
-            .onClick(() => {
-              this.onLiked?.();
-            })
 
-          ActionButtonView({
-            imgResource: this.isCollected ? $r('app.media.btn_favorites_on') : $r('app.media.btn_favorites_normal'),
+          ArticleCardButtonView({
+            clickAnimationPath: 'common/lottie/collected_lottie.json',
+            cancelAnimationPath: 'common/lottie/cancel_collect_lottie.json',
+            isClicked: this.isCollected,
             count: this.articleItem.collectionCount,
-            textWidth: $r('app.float.star_icon_width')
+            articleId: this.articleItem.id,
+            textWidth: $r('app.float.star_icon_width'),
+            type: 'collect',
+            onClicked: this.onCollected,
+            normalImage: $r('app.media.btn_favorites_normal'),
+            onImage: $r('app.media.btn_favorites_on')
           })
-            .onClick(() => {
-              this.onCollected?.()
-            })
         }
         .width(CommonConstants.FULL_PERCENT)
         .justifyContent(FlexAlign.SpaceBetween)
@@ -112,12 +120,6 @@ export struct ArticleCardView {
     .alignItems(VerticalAlign.Top)
     .width(CommonConstants.FULL_PERCENT)
     .height($r('app.float.card_height'))
-    .onClick(() => {
-      const bundleName = (getContext(this) as common.UIAbilityContext).applicationInfo.name;
-      router.pushUrl({
-        url: `@bundle:${bundleName}${CommonConstants.DISCOVER_ARTICLE_DETAIL_PAGE}`,
-        params: { resourceId: this.articleItem.id }
-      });
-    })
+    .onClick(this.handleClick)
   }
 }

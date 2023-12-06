@@ -14,3 +14,7 @@
  */
 
 export { DiscoverView } from './src/main/ets/DiscoverView';
+
+export { ArticleDetailView } from './src/main/ets/components/ArticleDetailView';
+
+export { FeedList } from './src/main/ets/components/FeedList';

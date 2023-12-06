@@ -13,6 +13,7 @@
  * limitations under the License.
  */
 
+import { BreakpointType, BreakpointTypeEnum } from '@ohos/common';
 import ZonesItem from '../entity/ZonesItem';
 import { ChallengeConstants as Const } from '../constants/ChallengeConstants';
 import DesignStyleSwiper from './DesignStyleSwiper';
@@ -20,23 +21,28 @@ import DesignStyleSwiper from './DesignStyleSwiper';
 @Component
 export default struct StyleListItem {
   @Consume('introductionData') introductionData: ZonesItem;
+  @StorageProp('currentBreakpoint') currentBreakpoint: string = BreakpointTypeEnum.MD;
 
   build() {
     Column() {
       ForEach(this.introductionData.content, (item: string) => {
         Text(item)
-          .width(Const.FULL_PERCENT)
+          .width(new BreakpointType<Length>({
+            sm: Const.PERCENT_86,
+            md: Const.PERCENT_93,
+            lg: Const.PERCENT_63
+          }).getValue(this.currentBreakpoint))
           .fontSize($r('app.float.font_size_normal'))
-          .margin({ bottom: $r('app.float.content_margin_bottom') })
+          .margin({ bottom: $r('app.float.xxl_padding_margin') })
       }, (item: ResourceStr) => JSON.stringify(item))
       Column() {
         DesignStyleSwiper()
       }
       .margin({
-        top: $r('app.float.content_container_margin_top'),
-        bottom: $r('app.float.content_margin_bottom') })
+        top: $r('app.float.xxl_padding_margin'),
+        bottom: $r('app.float.xxl_padding_margin') })
     }
     .width(Const.FULL_PERCENT)
-    .padding($r('app.float.guide_padding'))
+    .padding({ top: $r('app.float.xxl_padding_margin'), bottom: $r('app.float.xxl_padding_margin') })
   }
 }

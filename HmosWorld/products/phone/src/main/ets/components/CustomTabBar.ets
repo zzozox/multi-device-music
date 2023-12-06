@@ -13,49 +13,85 @@
  * limitations under the License.
  */
 
+import { BreakpointType, BreakpointTypeEnum, WindowUtil } from '@ohos/common';
 import { AppConstants } from '../constants/AppConstants';
 import { TabBarData, TabBarType, TabsInfo } from '../model/TabBarModel';
 
 @Component
 export struct CustomTabBar {
   @Link currentIndex: TabBarType;
+  @StorageLink('currentBreakpoint') currentBreakpoint: BreakpointTypeEnum = BreakpointTypeEnum.MD;
 
-  @Builder TabItem(index: TabBarType) {
-    Column() {
-      Image(this.currentIndex === index ? TabsInfo[index].activeIcon : TabsInfo[index].defaultIcon)
-        .size(index === TabBarType.CHALLENGE ?
-          { width: $r('app.float.tab_big_img_width'), height: $r('app.float.tab_big_img_height') } :
-          { width: $r('app.float.tab_img_size'), height: $r('app.float.tab_img_size') })
-        .margin({ top: index === TabBarType.CHALLENGE ? $r('app.float.tab_margin') : 0 })
-      Text(TabsInfo[index].title)
-        .fontSize($r('app.float.tab_font_size'))
-        .margin({ top: $r('app.float.tab_title_margin') })
-        .fontWeight(AppConstants.TAB_FONT_WEIGHT)
-        .fontColor(index === this.currentIndex ? $r('app.color.theme_blue_color') : $r('app.color.tab_bar_color'))
+  onChange(index: TabBarType): void {
+    this.currentIndex = index;
+    if (this.currentIndex === TabBarType.MINE) {
+      WindowUtil.updateStatusBarColor(getContext(this), true);
+    } else {
+      WindowUtil.updateStatusBarColor(getContext(this), false);
     }
-    .clip(false)
-    .width(AppConstants.TAB_PERCENT)
-    .height(AppConstants.FULL_PERCENT)
-    .justifyContent(FlexAlign.Center)
-    .onClick(() => {
-      this.currentIndex = index;
-    })
   }
 
   build() {
-    Row() {
+    Flex({
+      direction: this.currentBreakpoint === BreakpointTypeEnum.LG ? FlexDirection.Column : FlexDirection.Row,
+      alignItems: ItemAlign.Center,
+      justifyContent: FlexAlign.SpaceAround
+    }) {
       ForEach(TabsInfo, (item: TabBarData) => {
-        this.TabItem(item.id)
-      })
+        TabItem({
+          index: item.id,
+          selectedIndex: this.currentIndex,
+          onChange: (index: number) => this.onChange(index)
+        })
+      }, (item: TabBarData) => item.id.toString())
     }
     .backgroundColor($r('app.color.hmos_light_white'))
     .border({
-      width: { top: $r('app.float.tab_border_width') },
+      width: this.currentBreakpoint === BreakpointTypeEnum.LG ? { right: $r('app.float.tab_border_width') } : {
+        top: $r('app.float.tab_border_width')
+      },
       color: $r('app.color.tab_border_color')
     })
-    .margin({ top: $r('app.float.tool_bar_margin') })
+    .padding(this.currentBreakpoint === BreakpointTypeEnum.LG ? {
+      top: AppConstants.TAB_PERCENT,
+      bottom: AppConstants.TAB_PERCENT
+    } : 0)
     .clip(false)
-    .height($r('app.float.tool_bar_height'))
-    .width(AppConstants.FULL_PERCENT)
+    .height(new BreakpointType<Length>({
+      sm: $r('app.float.tool_bar_height'),
+      md: $r('app.float.tool_bar_height'),
+      lg: AppConstants.FULL_PERCENT
+    }).getValue(this.currentBreakpoint))
+    .width(new BreakpointType<Length>({
+      sm: AppConstants.FULL_PERCENT,
+      md: AppConstants.FULL_PERCENT,
+      lg: $r('app.float.tool_bar_width')
+    }).getValue(this.currentBreakpoint))
+  }
+}
+
+@Component
+struct TabItem {
+  @Prop index: number
+  @Prop selectedIndex: number;
+  onChange: (index: number) => void = () => {
+  };
+
+  build() {
+    Column() {
+      Image(this.selectedIndex === this.index ? TabsInfo[this.index].activeIcon : TabsInfo[this.index].defaultIcon)
+        .size(this.index === TabBarType.CHALLENGE ?
+          { width: $r('app.float.tab_big_img_width'), height: $r('app.float.tab_big_img_height') } :
+          { width: $r('app.float.tab_img_size'), height: $r('app.float.tab_img_size') })
+        .margin({ top: this.index === TabBarType.CHALLENGE ? $r('app.float.tab_margin') : 0 })
+      Text(TabsInfo[this.index].title)
+        .fontSize($r('app.float.tab_font_size'))
+        .margin({ top: $r('app.float.tab_title_margin') })
+        .fontWeight(AppConstants.TAB_FONT_WEIGHT)
+        .fontColor(this.index === this.selectedIndex ? $r('app.color.theme_blue_color') : $r('app.color.tab_bar_color'))
+    }
+    .clip(false)
+    .justifyContent(FlexAlign.Center)
+    .onClick(() => this.onChange(this.index))
   }
 }

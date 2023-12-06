@@ -20,6 +20,7 @@ export default class Constants {
   static readonly FULL_SCREEN: string = '100%';
   static readonly ACCOUNT_POSITION_X: string = '46%';
   static readonly PERCENT_50 = '50%';
+  static readonly PERCENT_80 = '80%';
   static readonly PERCENT_90 = '90%';
   /**
    * opacity
@@ -44,7 +45,10 @@ export default class Constants {
    * other
    */
   static readonly REFRESH_DELAY: number = 1000;
-  static readonly ACHIEVEMENT_LIST_LANES: number = 3;
+  static readonly ACHIEVEMENT_LIST_LANES_SM: number = 3;
+  static readonly ACHIEVEMENT_LIST_LANES_MD: number = 5
+  static readonly ACHIEVEMENT_LIST_LANES_LG: number = 6;
+  static readonly COUNT_TWO: number = 2;
 }
 
 /**

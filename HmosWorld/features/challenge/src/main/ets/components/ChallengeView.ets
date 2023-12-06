@@ -139,13 +139,11 @@ export struct ChallengeView {
     .height(Const.FULL_PERCENT)
     .width(Const.FULL_PERCENT)
     .onAreaChange((oldVal: Area, newVal: Area) => {
-      if (this.mapContainerWidth === 0 || this.mapContainerHeight === 0) {
-        this.mapContainerWidth = Number(newVal.width);
-        this.mapContainerHeight = Number(newVal.height);
-        Logger.info(TAG, 'mapContainerWidth: ' + this.mapContainerWidth);
-        Logger.info(TAG, 'mapContainerHeight: ' + this.mapContainerHeight);
-        this.initMap();
-      }
+      this.mapContainerWidth = Number(newVal.width);
+      this.mapContainerHeight = Number(newVal.height);
+      Logger.info(TAG, 'mapContainerWidth: ' + this.mapContainerWidth);
+      Logger.info(TAG, 'mapContainerHeight: ' + this.mapContainerHeight);
+      this.initMap();
     })
   }
 }
@@ -160,7 +158,7 @@ struct MapIcons {
         (item: MapElement) => {
           IconItem({ item: item })
         },
-        (item: MapElement) => JSON.stringify(item)
+        (item: MapElement) => item.id.toString()
       )
     }
   }

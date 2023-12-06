@@ -31,6 +31,14 @@
     {
       "name": "topic_title_main_family",
       "value": "HarmonyHeiTi-Medium"
+    },
+    {
+      "name": "topic_update_success",
+      "value": "主题设置成功"
+    },
+    {
+      "name": "topic_update_fail",
+      "value": "主题设置失败"
     }
   ]
 }

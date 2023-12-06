@@ -13,42 +13,57 @@
  * limitations under the License.
  */
 
-import { Topic } from '@ohos/common';
+import { BreakpointType, BreakpointTypeEnum, Topic } from '@ohos/common';
 import { THEME_LIST, ThemeConstants } from '../constants/ThemeConstants';
-import { TopicModel } from '../model/TopicModel';
 
 @Component
-export struct TopicItem {
-  @Prop item: Topic = new Topic();
-  topicModel: TopicModel = TopicModel.getInstance();
+export struct TopicItemView {
+  @Prop item: Topic;
+  @State isSelected: boolean = this.item.isFollowed;
+  @StorageProp('currentBreakpoint') currentBreakpoint: string = BreakpointTypeEnum.MD;
+  handleClick?: () => void;
 
   build() {
-    Stack() {
+    Stack({ alignContent: Alignment.TopEnd }) {
       Image($r('app.media.ic_checked'))
-        .size({ width: $r('app.float.topic_icon_size'), height: $r('app.float.topic_icon_size') })
+        .width(new BreakpointType({
+          sm: $r('app.float.topic_icon_size_md'),
+          md: $r('app.float.topic_icon_size_md'),
+          lg: $r('app.float.topic_icon_size_lg')
+        }).getValue(this.currentBreakpoint))
+        .aspectRatio(1)
         .offset({ x: ThemeConstants.TOPIC_ICON_OFFSET_X, y: ThemeConstants.TOPIC_ICON_OFFSET_Y })
         .zIndex(ThemeConstants.Z_INDEX_TWO)
-        .visibility(this.item.isFollowed ? Visibility.Visible : Visibility.None)
+        .visibility(this.isSelected ? Visibility.Visible : Visibility.None)
 
       Column({ space: ThemeConstants.COLUMN_SPACE }) {
         Image(THEME_LIST[this.item.id])
           .interpolation(ImageInterpolation.High)
-          .width($r('app.float.topic_image_size'))
-          .height($r('app.float.topic_image_size'))
+          .width(new BreakpointType({
+            sm: $r('app.float.topic_image_size_md'),
+            md: $r('app.float.topic_image_size_md'),
+            lg: $r('app.float.topic_image_size_lg')
+          }).getValue(this.currentBreakpoint))
+          .aspectRatio(1)
         Text(this.item.name)
           .topicTitleStyle()
       }
-      .width($r('app.float.topic_size'))
-      .height($r('app.float.topic_size'))
+      .width(new BreakpointType({
+        sm: $r('app.float.topic_size_md'),
+        md: $r('app.float.topic_size_md'),
+        lg: $r('app.float.topic_size_lg')
+      }).getValue(this.currentBreakpoint))
+      .aspectRatio(1)
       .alignItems(HorizontalAlign.Center)
       .justifyContent(FlexAlign.Center)
-      .borderWidth(this.item.isFollowed ? $r('app.float.topic_icon_border') : 0)
-      .borderColor(this.item.isFollowed ? $r('app.color.btn_bg') : $r('app.color.item_white_bg'))
+      .borderWidth(this.isSelected ? $r('app.float.topic_icon_border') : 0)
+      .borderColor(this.isSelected ? $r('app.color.btn_bg') : $r('app.color.item_white_bg'))
       .borderRadius($r('app.float.topic_border'))
       .backgroundColor($r('app.color.item_white_bg'))
     }
     .onClick(() => {
-      this.topicModel.changeFollowedTopic(this.item,!this.item.isFollowed);
+      this.isSelected = !this.isSelected;
+      this.handleClick?.();
     })
   }
 }
@@ -56,6 +71,7 @@ export struct TopicItem {
 @Extend(Text)
 function topicTitleStyle() {
   .fontFamily($r('app.string.topic_title_main_family'))
+  .fontWeight(FontWeight.Medium)
   .fontColor($r('app.color.topic_color'))
   .fontSize($r('app.float.topic_title_font'))
 }
