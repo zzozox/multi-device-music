@@ -1,0 +1,11 @@
+{
+  "license": "Apache-2.0",
+  "devDependencies": {},
+  "author": "",
+  "name": "imageedit",
+  "description": "Please describe the basic information.",
+  "version": "1.0.0",
+  "dependencies": {
+    "@ohos/common": "file:../../commons/common"
+  }
+}
