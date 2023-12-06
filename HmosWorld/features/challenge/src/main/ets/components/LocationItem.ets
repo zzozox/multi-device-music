@@ -15,6 +15,7 @@
 
 import ZonesItem from '../entity/ZonesItem';
 import { ChallengeConstants as Const } from '../constants/ChallengeConstants';
+import { BreakpointType, BreakpointTypeEnum } from '@ohos/common';
 
 const MIN_OPACITY: number = 0.5;
 const MAX_OPACITY: number = 1.2;
@@ -23,13 +24,21 @@ const MAX_OPACITY: number = 1.2;
 export default struct LocationItem {
   @Prop imgScale: number = 0;
   @Consume('introductionData') introductionData: ZonesItem;
+  @StorageProp('currentBreakpoint') currentBreakpoint: string = BreakpointTypeEnum.MD;
 
   build() {
     Column() {
       Image(this.introductionData.starLinePic[1])
-        .height($r('app.float.star_img_height'))
-        .aspectRatio(Const.STAR_IMG_ASPECT)
-        .margin({ top: $r('app.float.introduction_star_line_margin'), bottom: $r('app.float.introduction_star_line_margin') })
+        // .height($r('app.float.star_img_height'))
+        .width(new BreakpointType<Length>({
+          sm: Const.FULL_PERCENT,
+          md: Const.PERCENT_70,
+          lg: Const.PERCENT_47
+        }).getValue(this.currentBreakpoint))
+        .margin({
+          top: $r('app.float.introduction_star_line_margin'),
+          bottom: $r('app.float.introduction_star_line_margin')
+        })
 
       Stack() {
         Image(this.introductionData.geographyPics[0])
@@ -54,9 +63,14 @@ export default struct LocationItem {
           .aspectRatio(1)
       }
       .margin({ top: $r('app.float.introduction_image_margin') })
-      .width(Const.FULL_PERCENT)
-      .height($r('app.float.building_img_height'))
+      .width(new BreakpointType<Length>({
+        sm: Const.FULL_PERCENT,
+        md: Const.PERCENT_70,
+        lg: Const.PERCENT_47
+      }).getValue(this.currentBreakpoint))
+      .aspectRatio(1.3)
     }
-    .padding($r('app.float.guide_padding'))
+    .width(Const.FULL_PERCENT)
+    .padding({ top: $r('app.float.xxl_padding_margin'), bottom: $r('app.float.xxl_padding_margin') })
   }
 }

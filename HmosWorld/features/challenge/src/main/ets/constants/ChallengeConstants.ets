@@ -29,6 +29,52 @@ export class ChallengeConstants {
    * 50 percent.
    */
   static readonly HALF_PERCENT: string = '50%';
+
+  /**
+   * 93,5 percent.
+   */
+  static readonly PERCENT_93: string = '93.5%';
+
+  /**
+   * 90 percent.
+   */
+  static readonly PERCENT_90: string = '90%';
+
+  /**
+   * 87 percent.
+   */
+  static readonly PERCENT_87: string = '87%';
+
+  /**
+   * 86.7 percent.
+   */
+  static readonly PERCENT_86: string = '86.7%';
+
+  /**
+   * 70 percent.
+   */
+  static readonly PERCENT_70: string = '70%';
+
+  /**
+   * 64 percent.
+   */
+  static readonly PERCENT_64: string = '64%';
+
+  /**
+   * 63.5 percent.
+   */
+  static readonly PERCENT_63: string = '63.5%';
+
+  /**
+   * 47 percent.
+   */
+  static readonly PERCENT_47: string = '47%';
+
+  /**
+   * SM margin padding.
+   */
+  static readonly SM_MARGIN_PADDING: number = 12;
+
   /**
    * 0.5.
    */
@@ -42,10 +88,22 @@ export class ChallengeConstants {
    * Spring motion dampingFraction: 1.2.
    */
   static readonly DAMPING_FRACTION: number = 1.2;
+
   /**
    * Introduction page top image aspect ratio.
    */
   static readonly IMG_ASPECT_RATIO: number = 10 / 13;
+
+  /**
+   * Introduction page build image aspect ratio.
+   */
+  static readonly BUILDING_ASPECT_RATIO: number = 1.3;
+
+  /**
+   * Introduction page build top image aspect ratio.
+   */
+  static readonly BUILD_TOP_ASPECT_RATIO: number = 1.1;
+
   /**
    * Introduction page top image ratio coefficient.
    */
@@ -166,7 +224,7 @@ export class ChallengeConstants {
   /**
    * map icon font style
    */
-  static readonly MAP_ICON_FONT_STYLE: string = '40px bolder';
+  static readonly MAP_ICON_FONT_STYLE: string = '14vp bolder';
   /**
    * Actual width of the map image, in px.
    */

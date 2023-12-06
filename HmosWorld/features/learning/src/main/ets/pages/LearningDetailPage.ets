@@ -16,7 +16,7 @@
 import common from '@ohos.app.ability.common';
 import router from '@ohos.router';
 import webview from '@ohos.web.webview';
-import { LoadingLayout, Logger } from '@ohos/common';
+import { BreakpointType, BreakpointTypeEnum, LoadingLayout, Logger, WebpageStatus } from '@ohos/common';
 import { LearningConstants } from '../constants/LearningConstants';
 import { LearningPath } from '../entity/LearningPath';
 
@@ -29,7 +29,9 @@ const LEARN_MIN_DURATION = 5;
 struct LearningDetailPage {
   @State learningItem: LearningPath = (router.getParams() as Record<string, LearningPath>)['learningItem'] as LearningPath;
   @State webViewController: webview.WebviewController = new webview.WebviewController();
+  @StorageProp('currentBreakpoint') currentBreakpoint: string = BreakpointTypeEnum.MD;
   @State isLoading: boolean = true;
+  @State webStatus: WebpageStatus = WebpageStatus.INIT;
   private intervalId?: number;
   private learnSeconds: number = 0;
 
@@ -41,7 +43,6 @@ struct LearningDetailPage {
     let bundleName = (getContext(this) as common.UIAbilityContext).applicationInfo.name;
     if (this.learningItem.isLearned === false && this.learnSeconds >= LEARN_MIN_DURATION) {
       AppStorage.setOrCreate<boolean>('isLearned', true);
-      AppStorage.setOrCreate<boolean>('isMap', true);
       router.back({
         url: `@bundle:${bundleName}/phone/ets/pages/MainPage`,
         params: { learningId: this.learningItem.id }
@@ -53,7 +54,7 @@ struct LearningDetailPage {
   }
 
   onPageHide() {
-    if (this.intervalId) {
+    if (this.intervalId && this.intervalId > -1) {
       clearInterval();
       this.intervalId = undefined;
     }
@@ -75,26 +76,49 @@ struct LearningDetailPage {
 
   build() {
     Stack() {
-      Web({ controller: this.webViewController, src: this.learningItem.url })
-        .darkMode(WebDarkMode.Auto)
-        .fileAccess(true)
-        .mixedMode(MixedMode.All)
-        .cacheMode(CacheMode.None)
-        .domStorageAccess(true)
-        .zoomAccess(true)
-        .javaScriptAccess(true)
-        .onPageBegin(() => {
-          this.isLoading = false;
-          Logger.info(TAG, 'start loading');
-        })
-        .onPageEnd(() => {
-          Logger.info(TAG, 'loading completed');
-          this.startLearning();
-        })
+      Column() {
+        Row() {
+          Image($r('app.media.ic_back'))
+            .width($r('app.float.achieve_close_icon_size'))
+            .margin({ left: $r('app.float.navigation_margin'), right: $r('app.float.navigation_margin') })
+            .onClick(() => {
+              this.onBackPress();
+            })
+          Text(this.learningItem.title)
+            .fontSize($r('app.float.font_size_large'))
+        }
         .width(LearningConstants.FULL_PERCENT)
-        .height(LearningConstants.FULL_PERCENT)
-      if (this.isLoading) {
-        LoadingLayout()
+        .height($r('app.float.navigation_height'))
+
+        if (this.webStatus != WebpageStatus.FINISHED) {
+          LoadingLayout()
+        }
+        Web({ controller: this.webViewController, src: this.learningItem.url })
+          .darkMode(WebDarkMode.Auto)
+          .fileAccess(true)
+          .mixedMode(MixedMode.All)
+          .cacheMode(CacheMode.None)
+          .domStorageAccess(true)
+          .zoomAccess(true)
+          .javaScriptAccess(true)
+          .onErrorReceive((event) => {
+            this.webStatus = WebpageStatus.FINISHED
+          })
+          .onPageBegin(() => {
+            this.isLoading = false;
+            Logger.info(TAG, 'start loading');
+          })
+          .onPageEnd(() => {
+            Logger.info(TAG, 'loading completed');
+            this.webStatus = WebpageStatus.FINISHED
+            this.startLearning();
+          })
+          .width(new BreakpointType({
+            sm: LearningConstants.FULL_PERCENT,
+            md: LearningConstants.PERCENT_70,
+            lg: LearningConstants.PERCENT_64
+          }).getValue(this.currentBreakpoint))
+          .height(LearningConstants.FULL_PERCENT)
       }
     }
     .padding({ top: AppStorage.get<number>('statusBarHeight') })

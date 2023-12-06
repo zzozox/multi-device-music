@@ -13,7 +13,6 @@
  * limitations under the License.
  */
 
-import Intl from '@ohos.intl';
 import common from '@ohos.app.ability.common';
 import promptAction from '@ohos.promptAction';
 import {
@@ -31,8 +30,6 @@ import { NetworkNewsResources } from '@ohos/common/src/main/ets/entity/NetworkNe
 import { ResourcesData } from '@ohos/common/src/main/ets/entity/ResourcesData';
 
 const TAG = '[DiscoverModel]';
-const locale = new Intl.Locale();
-const DISCOVER_MODEL = 'discoverModel';
 
 @Observed
 export class DiscoverModel {
@@ -54,8 +51,9 @@ export class DiscoverModel {
   detailData: ResourceDetail = new ResourceDetail();
   private resourcesRepository: ResourcesRepository = new ResourcesRepository();
   private eventHub: common.EventHub = (getContext(this) as common.UIAbilityContext).eventHub;
+  private static instance: DiscoverModel;
 
-  constructor() {
+  private constructor() {
     Logger.info(TAG, 'DiscoverModel constructor');
     // Subscribing to public events
     this.eventHub.on(CommonConstants.COLLECTED_EVENT,
@@ -69,10 +67,10 @@ export class DiscoverModel {
    * @returns discover model instance.
    */
   public static getInstance(): DiscoverModel {
-    if (!AppStorage.get<DiscoverModel>(DISCOVER_MODEL)) {
-      AppStorage.setOrCreate(DISCOVER_MODEL, new DiscoverModel());
+    if (!DiscoverModel.instance) {
+      DiscoverModel.instance = new DiscoverModel();
     }
-    return AppStorage.get<DiscoverModel>(DISCOVER_MODEL) as DiscoverModel;
+    return DiscoverModel.instance;
   }
 
   /**

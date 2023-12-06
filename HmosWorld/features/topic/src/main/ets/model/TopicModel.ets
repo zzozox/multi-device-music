@@ -13,83 +13,51 @@
  * limitations under the License.
  */
 
-import { Topic, TopicsRepository, UserAccount, TopicType, LoadingStatus } from '@ohos/common';
+import { Logger, ObservedArray, Topic, TopicsRepository, UserAccount } from '@ohos/common';
 
-@Observed
+const TAG = '[TopicModel]';
+
 export class TopicModel {
+  public totalTopicList: ObservedArray<Topic> = new ObservedArray<Topic>();
   private resourceRepo: TopicsRepository = new TopicsRepository();
-  public loadingStatus: LoadingStatus = LoadingStatus.OFF;
-  private topicTotal: Topic[] = [];
-  public feedList: Topic[] = [];
-  public topicList: Topic[] = [];
-  private followedIds: string[] = [];
-  public followCheck: boolean = true;
+  private static instance: TopicModel;
+  private constructor() {}
 
   public static getInstance(): TopicModel {
-    let topicModel: TopicModel = AppStorage.get('topicModel') as TopicModel;
-    if (!topicModel) {
-      AppStorage.setOrCreate('topicModel', new TopicModel());
+    if (!TopicModel.instance) {
+      TopicModel.instance = new TopicModel();
     }
-    return AppStorage.get('topicModel') as TopicModel;
+    return TopicModel.instance;
   }
 
-  getTopics(): void {
-    if (this.feedList.length !== 0) {
-      this.checkAndUpdate();
-      return;
-    }
-    let currentUser: UserAccount = AppStorage.get<UserAccount>('user') as UserAccount;
-    this.loadingStatus = LoadingStatus.LOADING;
-    this.resourceRepo.getTopics(currentUser.id).then((topics: Topic[]) => {
-      this.topicTotal = topics;
-      this.checkAndUpdate();
-    }).catch(() => {
-      this.loadingStatus = LoadingStatus.FAILED;
+  getTopics(): Promise<void> {
+    const currentUser: UserAccount = AppStorage.get<UserAccount>('user') as UserAccount;
+    return new Promise((resolve, reject) => {
+      this.resourceRepo.getTopics(currentUser.id).then((topics: Topic[]) => {
+        this.totalTopicList.length = 0;
+        topics.forEach((topic: Topic) => {
+          this.totalTopicList.push(new Topic(topic));
+        })
+        resolve();
+      }).catch((err: Error) => {
+        Logger.error(TAG, `Get topics failed! Error message is ${err}`);
+        reject();
+      });
     });
   }
 
-  updateLocalTopic(): void {
-    this.topicTotal = this.feedList.concat(this.topicList);
-  }
-
-  checkAndUpdate(): void {
-    this.updateFeedAndTopic();
-    this.checkFollowedTopic();
-    this.loadingStatus = LoadingStatus.SUCCESS;
-  }
-
-  updateFeedAndTopic(): void {
-    this.feedList = this.topicTotal.filter((item: Topic) => item.type === TopicType.FEED);
-    this.topicList = this.topicTotal.filter((item: Topic) => item.type === TopicType.TOPIC);
-    this.followedIds = this.topicTotal.filter((item: Topic) => item.isFollowed === true).map((item: Topic) => item.id);
-  }
-
-  editTopicsFollowed(): Promise<void> {
+  updateFollowedTopics(followedIds: string[]): Promise<void> {
     let currentUser: UserAccount = AppStorage.get<UserAccount>('user') as UserAccount;
-    return this.resourceRepo.editTopicsFollowed(currentUser.id, this.followedIds.join(','));
-  }
-
-  changeFollowedTopic(topic: Topic, isFollowed: boolean): void {
-    topic.isFollowed = isFollowed;
-    if (!topic.isFollowed) {
-      this.followedIds = this.followedIds.filter((id: string) => id !== topic.id);
-    } else {
-      this.followedIds.push(topic.id);
-    }
-    if (topic.type === TopicType.FEED) {
-      this.feedList = this.feedList.map((item: Topic) => item.id === topic.id ? topic : item);
-    } else {
-      this.topicList = this.topicList.map((item: Topic) => item.id === topic.id ? topic : item);
-    }
-    this.checkFollowedTopic();
-  }
-
-  checkFollowedTopic(): void {
-    let numFollowedFeed: number = this.feedList.filter((item: Topic) => item.isFollowed).length;
-    let numFollowedTopic: number = this.topicList.filter((item: Topic) => item.isFollowed).length;
-    this.followCheck = true;
-    if (numFollowedFeed < 1 || numFollowedTopic < 1) {
-      this.followCheck = false;
-    }
+    return new Promise((resolve, reject) => {
+      this.resourceRepo.editTopicsFollowed(currentUser.id, followedIds.join(',')).then(() => {
+        this.totalTopicList.forEach((topic: Topic) => {
+          topic.isFollowed = followedIds.find((id: string) => id === topic.id) ? true : false;
+        })
+        resolve();
+      }).catch((err: Error) => {
+        Logger.error(TAG, `Update followed topics failed! Error message is ${err}`);
+        reject();
+      })
+    })
   }
 }

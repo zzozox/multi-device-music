@@ -31,6 +31,14 @@
     {
       "name": "topic_title_main_family",
       "value": "HarmonyHeiTi-Medium"
+    },
+    {
+      "name": "topic_update_success",
+      "value": "The theme is set successfully"
+    },
+    {
+      "name": "topic_update_fail",
+      "value": "Failed to set the theme"
     }
   ]
 }

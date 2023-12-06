@@ -31,6 +31,30 @@
     {
       "name": "skeleton_color_light",
       "value": "#FFECECEC"
+    },
+    {
+      "name": "theme_black_color",
+      "value": "#000000"
+    },
+    {
+      "name": "theme_yellow_color",
+      "value": "#EB9500"
+    },
+    {
+      "name": "collected_bg_color",
+      "value": "#1AFFA200"
+    },
+    {
+      "name": "action_button_bg_color",
+      "value": "#1A000000"
+    },
+    {
+      "name": "liked_bg_color",
+      "value": "#1AFF3E50"
+    },
+    {
+      "name": "skeleton_color",
+      "value": "#ECECEC"
     }
   ]
 }

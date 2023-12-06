@@ -67,7 +67,7 @@ export struct FeedCardView {
           ForEach(this.feedItem.topics.slice(0, MAX_TOPIC_NUM), (topic: string) => {
             LabelCard({ text: topic })
               .margin({ right: $r('app.float.xs_padding_margin') })
-          })
+          }, (item: string) => item)
         }
       }
       .width(CommonConstants.FULL_PERCENT)
@@ -88,25 +88,35 @@ export struct FeedCardView {
   }
 }
 
+const ColorMap: Map<string, string> = new Map<string, string>([
+  ['开发者故事', '65BB5C'],
+  ['活动公告', 'FF3E50'],
+  ['精彩活动', 'FF3E50'],
+  ['技术干货', '0A59F7'],
+  ['鸿蒙生态', '0A59F7']
+]);
+
 @Component
 struct LabelCard {
   @Prop text: string = '';
 
   build() {
-    Text(this.text)
-      .fontSize($r('app.float.xs_font_size'))
-      .fontColor($r('app.color.theme_blue_color'))
-      .textAlign(TextAlign.Center)
-      .fontWeight(FontWeight.Medium)
-      .fontFamily(CommonConstants.HARMONY_HEITI_MEDIUM_FONT_FAMILY)
-      .backgroundColor($r('app.color.theme_blue_background_color'))
-      .borderRadius($r('app.float.xs_border_radius'))
-      .padding({
-        left: $r('app.float.sm_padding_margin'),
-        right: $r('app.float.sm_padding_margin'),
-        top: $r('app.float.feed_label_padding'),
-        bottom: $r('app.float.feed_label_padding')
-      })
+    Row() {
+      Text(this.text)
+        .fontSize($r('app.float.xs_font_size'))
+        .fontColor('#' + ColorMap.get(this.text))
+        .textAlign(TextAlign.Center)
+        .fontWeight(FontWeight.Medium)
+        .fontFamily(CommonConstants.HARMONY_HEITI_MEDIUM_FONT_FAMILY)
+    }
+    .borderRadius($r('app.float.xs_border_radius'))
+    .backgroundColor('#1A' + ColorMap.get(this.text))
+    .padding({
+      left: $r('app.float.sm_padding_margin'),
+      right: $r('app.float.sm_padding_margin'),
+      top: $r('app.float.feed_label_padding'),
+      bottom: $r('app.float.feed_label_padding')
+    })
   }
 }
 
@@ -127,7 +137,8 @@ struct ViewsCountLabel {
         .fontColor(Color.White)
         .opacity(CommonConstants.FIRST_LEVEL_OPACITY)
     }
-    .padding($r('app.float.xs_padding_margin'))
+    .height($r('app.float.view_count_height'))
+    .padding({ left: $r('app.float.xs_padding_margin'), right: $r('app.float.xs_padding_margin') })
     .backgroundColor($r('app.color.view_counts_bg_color'))
     .borderRadius($r('app.float.md_border_radius'))
     .margin({ right: $r('app.float.sm_padding_margin'), bottom: $r('app.float.sm_padding_margin') })

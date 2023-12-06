@@ -15,28 +15,46 @@
 
 import router from '@ohos.router';
 import common from '@ohos.app.ability.common';
+import { BreakpointType, BreakpointTypeEnum } from '@ohos/common';
 import { ChallengeConstants as Const } from '../constants/ChallengeConstants';
 
 @Component
 export default struct ChallengeItem {
+  @StorageProp('currentBreakpoint') currentBreakpoint: string = BreakpointTypeEnum.MD;
+
   build() {
-    Row() {
+    Column() {
       Column() {
         Column() {
           Text($r('app.string.code_lab_challenge'))
             .fontWeight(FontWeight.Medium)
-            .lineHeight($r('app.float.medium_line_height'))
-            .fontSize($r('app.float.challenge_title_size'))
+            .fontSize(new BreakpointType<Length>({
+              sm: $r('app.float.challenge_title_size_sm'),
+              md: $r('app.float.challenge_title_size_md'),
+              lg: $r('app.float.challenge_title_size_lg')
+            }).getValue(this.currentBreakpoint))
           Text($r('app.string.challenge_desc'))
-            .lineHeight($r('app.float.smaller_line_height'))
+            .margin({ top: $r('app.float.normal_margin') })
             .fontColor($r('app.color.train_interval'))
-            .fontSize($r('app.float.smaller_font_size'))
+            .fontSize(new BreakpointType<Length>({
+              sm: $r('app.float.smaller_font_size'),
+              md: $r('app.float.challenge_title_size_sm'),
+              lg: $r('app.float.challenge_desc_size_lg')
+            }).getValue(this.currentBreakpoint))
         }
         .alignItems(HorizontalAlign.Start)
 
         Button($r('app.string.go_now'))
-          .height($r('app.float.small_btn_height'))
-          .fontSize($r('app.float.small_font_size'))
+          .height(new BreakpointType<Length>({
+            sm: $r('app.float.sm_btn_height'),
+            md: $r('app.float.md_btn_height'),
+            lg: $r('app.float.lg_btn_height')
+          }).getValue(this.currentBreakpoint))
+          .fontSize(new BreakpointType<Length>({
+            sm: $r('app.float.small_font_size'),
+            md: $r('app.float.challenge_desc_size_lg'),
+            lg: $r('app.float.challenge_title_size_md')
+          }).getValue(this.currentBreakpoint))
           .onClick(() => {
             let bundleName = (getContext(this) as common.UIAbilityContext).applicationInfo.name;
             router.pushUrl({
@@ -47,20 +65,22 @@ export default struct ChallengeItem {
       .justifyContent(FlexAlign.SpaceBetween)
       .alignItems(HorizontalAlign.Start)
       .borderRadius($r('app.float.introduction_image_border_radius'))
-      .width(Const.FULL_PERCENT)
+      .width(new BreakpointType<Length>({
+        sm: Const.PERCENT_86,
+        md: Const.PERCENT_70,
+        lg: Const.PERCENT_47
+      }).getValue(this.currentBreakpoint))
       .backgroundImage($r('app.media.ic_challenge_bg'))
       .backgroundImageSize(ImageSize.Cover)
       .aspectRatio(2.5)
       .padding({
-        left: $r('app.float.guide_padding'),
+        left: $r('app.float.xxl_padding_margin'),
         top: $r('app.float.normal_padding'),
         bottom: $r('app.float.normal_padding')
       })
     }
     .padding({
-      left: $r('app.float.guide_padding'),
-      right: $r('app.float.guide_padding'),
-      bottom: $r('app.float.guide_padding')
+      bottom: $r('app.float.xxl_padding_margin')
     })
   }
 }

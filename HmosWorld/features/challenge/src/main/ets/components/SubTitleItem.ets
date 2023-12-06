@@ -12,15 +12,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { BreakpointType, BreakpointTypeEnum } from '@ohos/common';
 
 import { ChallengeConstants as Const } from '../constants/ChallengeConstants';
 import ZonesItem from '../entity/ZonesItem';
 
+const ASPECT_MD: number = 0.7;
+const ASPECT_LG: number = 0.47;
+
 @Component
 export default struct SubTitleItem {
-  @State imgHeight: number = Math.ceil((AppStorage.get('deviceWidth') as number) / Const.TOP_IMG_ASPECT);
+  private deviceWidth: number = (AppStorage.get('deviceWidth') as number);
+  @State imgHeight: number = Math.ceil(this.deviceWidth / Const.TOP_IMG_ASPECT);
   @Consume('introductionData') introductionData: ZonesItem;
   @Prop topImgOffset: number = 0;
+  @StorageProp('currentBreakpoint') currentBreakpoint: string = BreakpointTypeEnum.MD;
 
   build() {
     Column() {
@@ -31,7 +37,7 @@ export default struct SubTitleItem {
         .margin({ top: $r('app.float.zone_title_margin') })
       Text(this.introductionData.subTitle)
         .fontSize($r('app.float.font_size_normal'))
-        .margin({ bottom: $r('app.float.navigation_margin'), top: $r('app.float.normal_margin') })
+        .margin({ bottom: $r('app.float.xxl_padding_margin'), top: $r('app.float.normal_margin') })
         .fontColor($r('app.color.desc_white_font_color'))
       Image(this.introductionData.starLinePic[0])
         .height($r('app.float.star_img_height'))
@@ -48,21 +54,35 @@ export default struct SubTitleItem {
       Stack({ alignContent: Alignment.Top }) {
         Image(this.introductionData.subPicMedium)
           .offset({ x: 0, y: -this.topImgOffset })
-          .height(this.imgHeight)
-          .width(Const.FULL_PERCENT)
+          .width(new BreakpointType<Length>({
+            sm: Const.FULL_PERCENT,
+            md: Const.PERCENT_70,
+            lg: Const.PERCENT_47
+          }).getValue(this.currentBreakpoint))
+          .height(Math.floor(this.deviceWidth * new BreakpointType<number>({
+            sm: 1,
+            md: ASPECT_MD,
+            lg: ASPECT_LG
+          }).getValue(this.currentBreakpoint) / Const.TOP_IMG_ASPECT))
           .objectFit(ImageFit.Fill)
         Image(this.introductionData.subPicTop)
           .objectFit(ImageFit.Cover)
-          .width(Const.FULL_PERCENT)
+          .width(new BreakpointType<Length>({
+            sm: Const.FULL_PERCENT,
+            md: Const.PERCENT_70,
+            lg: Const.PERCENT_47
+          }).getValue(this.currentBreakpoint))
       }
-      .margin({ top: $r('app.float.intro_margin_top') })
       .width(Const.FULL_PERCENT)
-      .height(this.imgHeight - this.topImgOffset)
+      .height(Math.floor(this.deviceWidth * new BreakpointType<number>({
+        sm: 1,
+        md: ASPECT_MD,
+        lg: ASPECT_LG
+      }).getValue(this.currentBreakpoint) / Const.TOP_IMG_ASPECT - this.topImgOffset))
       .clip(true)
     }
     .width(Const.FULL_PERCENT)
     .alignItems(HorizontalAlign.Center)
-    .margin({ top: $r('app.float.intro_margin_top') })
     .backgroundColor(this.introductionData.backgroundColor)
   }
 }

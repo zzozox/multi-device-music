@@ -9,10 +9,6 @@
       "value": "4vp"
     },
     {
-      "name": "medium_margin",
-      "value": "8vp"
-    },
-    {
       "name": "regular_margin",
       "value": "10vp"
     },
@@ -33,12 +29,8 @@
       "value": "25vp"
     },
     {
-      "name": "topic_margin_bottom",
-      "value": "5vp"
-    },
-    {
       "name": "header_height",
-      "value": "40vp"
+      "value": "48vp"
     },
     {
       "name": "action_button_margin_right",
@@ -62,11 +54,15 @@
     },
     {
       "name": "image_border_radius",
-      "value": "12vp"
+      "value": "8vp"
     },
     {
       "name": "login_size",
       "value": "30vp"
+    },
+    {
+      "name": "topic_image_size",
+      "value": "36vp"
     },
     {
       "name": "account_image_size",
@@ -93,8 +89,24 @@
       "value": "10vp"
     },
     {
-      "name": "achievement_image_size",
+      "name": "achievement_image_size_sm",
+      "value": "84vp"
+    },
+    {
+      "name": "achievement_image_size_md",
       "value": "96vp"
+    },
+    {
+      "name": "achievement_image_size_lg",
+      "value": "106vp"
+    },
+    {
+      "name": "xxl_padding_margin",
+      "value": "24vp"
+    },
+    {
+      "name": "md_padding_margin",
+      "value": "12vp"
     },
     {
       "name": "achievement_list_padding",
@@ -137,14 +149,6 @@
       "value": "4vp"
     },
     {
-      "name": "topics_font_border_padding_left_right",
-      "value": "8vp"
-    },
-    {
-      "name": "topics_padding_top",
-      "value": "8vp"
-    },
-    {
       "name": "topics_font_border_padding_top_bottom",
       "value": "2vp"
     },
@@ -173,6 +177,10 @@
       "value": "16fp"
     },
     {
+      "name": "nav_title_font_size",
+      "value": "24fp"
+    },
+    {
       "name": "mine_tab_margin",
       "value": "5vp"
     },
@@ -198,15 +206,11 @@
     },
     {
       "name": "user_image_size",
-      "value": "60vp"
+      "value": "48vp"
     },
     {
       "name": "user_image_border_radius",
-      "value": "40vp"
-    },
-    {
-      "name": "user_image_padding",
-      "value": "15vp"
+      "value": "24vp"
     },
     {
       "name": "user_account_font_size",
@@ -215,10 +219,6 @@
     {
       "name": "login_account_padding_bottom",
       "value": "2vp"
-    },
-    {
-      "name": "login_account_padding_left",
-      "value": "12vp"
     },
     {
       "name": "login_information_font_size",
@@ -249,8 +249,12 @@
       "value": "200vp"
     },
     {
-      "name": "user_background_height",
-      "value": "200vp"
+      "name": "user_background_height_lg",
+      "value": "150vp"
+    },
+    {
+      "name": "user_background_height_md",
+      "value": "120vp"
     },
     {
       "name": "none_view_image_size",
@@ -265,7 +269,11 @@
       "value": "16vp"
     },
     {
-      "name": "none_view_description_padding",
+      "name": "enlarge_img_size",
+      "value": "36vp"
+    },
+    {
+      "name": "sm_padding_margin",
       "value": "8vp"
     }
   ]

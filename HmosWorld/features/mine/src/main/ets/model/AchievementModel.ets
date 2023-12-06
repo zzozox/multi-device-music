@@ -17,47 +17,56 @@ export class AchieveImage {
   pathId: string = '';
   activeImage?: Resource;
   defaultImage?: Resource;
+  lottiePath: string = '';
 }
 
 export const ACHIEVE_IMAGE_LIST: AchieveImage[] = [
   {
     pathId: 'p001',
     activeImage: $r('app.media.learning_path_1_completed'),
-    defaultImage: $r('app.media.learning_path_1_default')
+    defaultImage: $r('app.media.learning_path_1_default'),
+    lottiePath: 'common/lottie/learning_path_1_lottie.json'
   },
   {
     pathId: 'p002',
     activeImage: $r('app.media.learning_path_2_completed'),
-    defaultImage: $r('app.media.learning_path_2_default')
+    defaultImage: $r('app.media.learning_path_2_default'),
+    lottiePath: 'common/lottie/learning_path_2_lottie.json'
   },
   {
     pathId: 'p003',
     activeImage: $r('app.media.learning_path_3_completed'),
-    defaultImage: $r('app.media.learning_path_3_default')
+    defaultImage: $r('app.media.learning_path_3_default'),
+    lottiePath: 'common/lottie/learning_path_3_lottie.json'
   },
   {
     pathId: 'p004',
     activeImage: $r('app.media.learning_path_4_completed'),
-    defaultImage: $r('app.media.learning_path_4_default')
+    defaultImage: $r('app.media.learning_path_4_default'),
+    lottiePath: 'common/lottie/learning_path_4_lottie.json'
   },
   {
     pathId: 'p005',
     activeImage: $r('app.media.learning_path_5_completed'),
-    defaultImage: $r('app.media.learning_path_5_default')
+    defaultImage: $r('app.media.learning_path_5_default'),
+    lottiePath: 'common/lottie/learning_path_5_lottie.json'
   },
   {
     pathId: 'p006',
     activeImage: $r('app.media.learning_path_6_completed'),
-    defaultImage: $r('app.media.learning_path_6_default')
+    defaultImage: $r('app.media.learning_path_6_default'),
+    lottiePath: 'common/lottie/learning_path_6_lottie.json'
   },
   {
     pathId: 'p007',
     activeImage: $r('app.media.learning_path_7_completed'),
-    defaultImage: $r('app.media.learning_path_7_default')
+    defaultImage: $r('app.media.learning_path_7_default'),
+    lottiePath: 'common/lottie/learning_path_7_lottie.json'
   },
   {
     pathId: 'p008',
     activeImage: $r('app.media.learning_path_8_completed'),
-    defaultImage: $r('app.media.learning_path_8_default')
+    defaultImage: $r('app.media.learning_path_8_default'),
+    lottiePath: 'common/lottie/learning_path_8_lottie.json'
   }
 ];

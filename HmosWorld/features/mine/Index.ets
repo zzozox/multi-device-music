@@ -1,2 +1,3 @@
 export { MineView } from './src/main/ets/components/MineView';
-export { UserModel } from  './src/main/ets/model/UserModel';
+
+export { UserModel } from './src/main/ets/model/UserModel';

@@ -13,14 +13,13 @@
  * limitations under the License.
  */
 
-import router from '@ohos.router';
-import common from '@ohos.app.ability.common';
 import { CommonConstants, LearningResource } from '@ohos/common';
 import Constants from '../constants/Constants';
 
 @Component
 export struct FeedCardView {
   @ObjectLink articleItem: LearningResource;
+  handleClick: () => void = () => {};
 
   build() {
     Row({ space: CommonConstants.SPACE_16 }) {
@@ -46,20 +45,20 @@ export struct FeedCardView {
         .layoutWeight(1)
 
         Row({ space: Constants.SMALL_SPACE }) {
-          ForEach(this.articleItem.topics, (text: string) => {
-            Text(text)
+          ForEach(this.articleItem.topics, (item: string) => {
+            Text(item)
               .fontSize($r('app.float.topics_font_size'))
               .textAlign(TextAlign.Center)
               .fontColor($r('app.color.theme_blue_color'))
               .backgroundColor($r('app.color.theme_blue_background_color'))
               .borderRadius($r('app.float.topics_font_border_radius'))
               .padding({
-                left: $r('app.float.topics_font_border_padding_left_right'),
-                right: $r('app.float.topics_font_border_padding_left_right'),
+                left: $r('app.float.sm_padding_margin'),
+                right: $r('app.float.sm_padding_margin'),
                 top: $r('app.float.topics_font_border_padding_top_bottom'),
                 bottom: $r('app.float.topics_font_border_padding_top_bottom')
               })
-          })
+          }, (item: string) => item)
         }
         .width(CommonConstants.FULL_PERCENT)
         .justifyContent(FlexAlign.Start)
@@ -100,13 +99,7 @@ export struct FeedCardView {
     .alignItems(VerticalAlign.Top)
     .width(CommonConstants.FULL_PERCENT)
     .height($r('app.float.card_height'))
-    .onClick(() => {
-      const bundleName = (getContext(this) as common.UIAbilityContext).applicationInfo.name;
-      router.pushUrl({
-        url: `@bundle:${bundleName}${CommonConstants.DISCOVER_ARTICLE_DETAIL_PAGE}`,
-        params: { resourceId: this.articleItem.id }
-      });
-    })
+    .onClick(this.handleClick)
   }
 }
 

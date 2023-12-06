@@ -27,6 +27,14 @@
     {
       "name": "failed_message",
       "value": "网络请求失败，请重试"
+    },
+    {
+      "name": "like",
+      "value": "点赞"
+    },
+    {
+      "name": "collect",
+      "value": "收藏"
     }
   ]
 }

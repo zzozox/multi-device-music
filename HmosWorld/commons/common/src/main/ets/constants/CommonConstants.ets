@@ -32,6 +32,7 @@ export class CommonConstants {
   // blur scale
   static readonly BLUR_SCALE: number = 0.15;
   // space
+  static readonly SPACE_8: number = 8;
   static readonly SPACE_12: number = 12;
   static readonly SPACE_16: number = 16;
   static readonly SPACE_20: number = 20;
@@ -45,6 +46,8 @@ export class CommonConstants {
   static readonly SWIPER_DURATION: number = 1000;
   // percent
   static readonly FULL_PERCENT: string = '100%';
+  static readonly PERCENT_70: string = '70%';
+  static readonly PERCENT_64: string = '64%';
   // common event
   static readonly COLLECTED_EVENT: string = 'collected_event';
   static readonly LIKED_EVENT: string = 'liked_event';
@@ -53,6 +56,8 @@ export class CommonConstants {
   // router path
   static readonly DISCOVER_FEED_DETAIL_PAGE = '/discover/ets/pages/FeedDetailPage';
   static readonly DISCOVER_ARTICLE_DETAIL_PAGE = '/discover/ets/pages/ArticleDetailPage';
+  // delay
+  static readonly DELAY_TIME: number = 30;
   // skeleton animation config
   static readonly SKELETON_ANIMATION: AnimateParam = {
     duration: 400,

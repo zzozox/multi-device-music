@@ -14,11 +14,15 @@
  */
 
 import curves from '@ohos.curves';
+import router from '@ohos.router';
+import common from '@ohos.app.ability.common';
+import { BreakpointTypeEnum } from '@ohos/common';
 import ZonesItem from '../entity/ZonesItem';
 import { ChallengeConstants as Const } from '../constants/ChallengeConstants';
 
 @Component
 export struct ImageViewDialog {
+  @StorageProp('currentBreakpoint') currentBreakpoint: string = BreakpointTypeEnum.MD;
   private deviceWidth: number = vp2px(AppStorage.get('deviceWidth') as number);
   private deviceHeight: number = vp2px(AppStorage.get('deviceHeight') as number);
   private imgWidth: number = 0;
@@ -84,6 +88,35 @@ export struct ImageViewDialog {
       Swiper() {
         ForEach(this.introductionData.imageList, (item: Resource, index?: number) => {
           Column() {
+            Row() {
+              Button() {
+                Image($r('app.media.ic_gallery_collage'))
+                  .width($r('app.float.image_edit_width'))
+                  .height($r('app.float.image_edit_height'))
+              }
+              .width($r('app.float.image_edit_button_width'))
+              .height($r('app.float.image_edit_button_height'))
+              .margin({ right: $r('app.float.image_edit_margin_right') })
+              .type(ButtonType.Normal)
+              .backgroundColor(Color.Transparent)
+              .onClick(() => {
+                animateTo({ duration: Const.SWIPER_DURATION }, () => {
+                  this.isPresent = !this.isPresent;
+                });
+                let context: common.UIAbilityContext = (getContext(this) as common.UIAbilityContext);
+                let bundleName: string = context.applicationInfo.name;
+                router.pushUrl({
+                  url: `@bundle:${bundleName}/imageEdit/ets/pages/HomePage`,
+                  params: {
+                    imageItem: item
+                  }
+                });
+              })
+            }
+            .width(Const.FULL_PERCENT)
+            .margin({ top: $r('app.float.image_edit_margin_top')})
+            .justifyContent(FlexAlign.End)
+
             Blank()
               .onClick(() => {
                 animateTo({ duration: Const.SWIPER_DURATION }, () => {
@@ -124,7 +157,13 @@ export struct ImageViewDialog {
       .width(Const.FULL_PERCENT)
       .height(Const.FULL_PERCENT)
       .loop(false)
-      .indicator(Indicator.dot().color(Color.Gray).bottom($r('app.float.indicator_bottom')))
+      .indicator(this.currentBreakpoint !== BreakpointTypeEnum.LG ? Indicator.dot().color(Color.Gray).bottom($r('app.float.indicator_bottom')) : false)
+      .displayArrow(this.currentBreakpoint === BreakpointTypeEnum.LG ? {
+        showBackground: true,
+        isSidebarMiddle: true,
+        arrowColor: $r('app.color.white'),
+        backgroundColor: $r('app.color.arrow_bg_white')
+      } : false)
       .index(this.currentIndex)
       .onChange((index: number) => {
         this.currentIndex = index;
@@ -178,5 +217,10 @@ export struct ImageViewDialog {
       )
       .visibility(this.isGesture ? Visibility.Visible : Visibility.Hidden)
     }
+    .onClick(()=>{
+      animateTo({ duration: Const.SWIPER_DURATION }, () => {
+        this.isPresent = !this.isPresent;
+      });
+    })
   }
 }

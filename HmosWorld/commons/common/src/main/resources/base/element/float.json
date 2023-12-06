@@ -203,6 +203,45 @@
     {
       "name": "default_icon_width",
       "value": "16vp"
+    },{
+      "name": "xxl_padding_margin",
+      "value": "24vp"
+    },
+    {
+      "name": "xl_padding_margin",
+      "value": "20vp"
+    },
+    {
+      "name": "lg_padding_margin",
+      "value": "16vp"
+    },
+    {
+      "name": "md_padding_margin",
+      "value": "12vp"
+    },
+    {
+      "name": "sm_padding_margin",
+      "value": "8vp"
+    },
+    {
+      "name": "xs_padding_margin",
+      "value": "4vp"
+    },
+    {
+      "name": "interactive_area_height",
+      "value": "72vp"
+    },
+    {
+      "name": "interactive_button_height",
+      "value": "40vp"
+    },
+    {
+      "name": "interactive_bar_icon_size",
+      "value": "22vp"
+    },
+    {
+      "name": "icon_size",
+      "value": "16vp"
     }
   ]
 }

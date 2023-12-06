@@ -19,7 +19,7 @@ export struct NoneContentView {
         Text(this.description)
           .fontColor($r('app.color.hmos_medium_black'))
           .fontSize($r('app.float.title_font_size'))
-          .padding({ top: $r('app.float.none_view_description_padding') })
+          .padding({ top: $r('app.float.sm_padding_margin') })
       }
       .height(Constants.FULL_SCREEN)
     }

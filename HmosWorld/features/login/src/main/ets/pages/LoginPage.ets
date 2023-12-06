@@ -18,7 +18,7 @@ import common from '@ohos.app.ability.common';
 import router from '@ohos.router';
 import promptAction from '@ohos.promptAction';
 import { UserModel } from '@ohos/mine';
-import { UserAccount, splashImages, Logger } from '@ohos/common';
+import { UserAccount, splashImages, Logger, WindowUtil } from '@ohos/common';
 import { ACCOUNT_LIST, Constants, BgInfo, UrlParam } from '../constants/LoginConstants';
 import { AccountSelectView } from '../components/AccountSelectView';
 import { InputAreaView } from '../components/InputAreaView';
@@ -37,6 +37,14 @@ struct LoginPage {
   private userModel: UserModel = UserModel.getInstance();
   private backgroundImg: Resource = this.getBackground();
   private timer: number = 0;
+
+  onPageShow() {
+    WindowUtil.updateStatusBarColor(getContext(this), true);
+  }
+
+  onPageHide() {
+    WindowUtil.updateStatusBarColor(getContext(this), false);
+  }
 
   LoadingEffect(): void {
     if (this.isSigning) {
@@ -242,6 +250,7 @@ struct LoginPage {
       }
     }
     .backgroundImageSize(ImageSize.Cover)
+    .backgroundImage(this.backgroundImg)
     .width(Constants.FULL_SCREEN)
     .height(Constants.FULL_SCREEN)
   }

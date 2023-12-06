@@ -58,7 +58,7 @@ export struct TopNavigationView {
                 button.onClick?.(this.detail)
               }
             })
-        })
+        }, (item: ActionButton) => JSON.stringify(item))
       }
     }
     .alignItems(VerticalAlign.Center)

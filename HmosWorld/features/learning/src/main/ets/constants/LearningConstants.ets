@@ -26,7 +26,7 @@ export class LearningConstants {
   /**
    * Achievement image aspect ratio.
    */
-  static readonly ACHIEVEMENT_ASPECT_RATIO: number = 2;
+  static readonly ACHIEVEMENT_ASPECT_RATIO: number = 1.28;
 
   /**
    * Achievement image zIndex.
@@ -67,6 +67,8 @@ export class LearningConstants {
    * 100 percent.
    */
   static readonly FULL_PERCENT: string = '100%';
+  static readonly PERCENT_70: string = '70%';
+  static readonly PERCENT_64: string = '64%';
 
   /**
    * Image blur reduce.
@@ -114,8 +116,22 @@ export class LearningConstants {
   static readonly MAX_MOVE_OFFSET = 50;
 
   /**
-   * The opacity of map bottom panel.
+   * Learning list space.
    */
-  static readonly  ACHIEVE_DIALOG_WIDTH ='80%';
-  static readonly  ACHIEVE_DIALOG_HEIGHT ='60%';
+  static readonly LIST_SPACE = 12;
+
+  /**
+   * Learning list lanes sm.
+   */
+  static readonly LEARNING_LANES_SM = 2;
+
+  /**
+   * Learning list lanes md.
+   */
+  static readonly LEARNING_LANES_MD = 3;
+
+  /**
+   * Learning list lanes lg.
+   */
+  static readonly LEARNING_LANES_LG = 6;
 }

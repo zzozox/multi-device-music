@@ -31,6 +31,14 @@
     {
       "name": "hmos_color_white",
       "value": "#FFFFFF"
+    },
+    {
+      "name": "skeleton_color_medium",
+      "value": "#FFF2F3F4"
+    },
+    {
+      "name": "achieve_background_color",
+      "value": "#373737"
     }
   ]
 }

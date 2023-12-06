@@ -72,6 +72,7 @@ class BasicDataSource <T> implements IDataSource {
   }
 }
 
+@Observed
 export default class LazyDataSource extends BasicDataSource<LearningResource> {
   dataArray: LearningResource[] = [];
 

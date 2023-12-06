@@ -7,7 +7,6 @@
   "main": "Index.ets",
   "version": "1.0.0",
   "dependencies": {
-    "@ohos/topic": "file:../topic",
     "@ohos/mine": "file:../mine",
     "@ohos/common": "file:../../commons/common"
   }

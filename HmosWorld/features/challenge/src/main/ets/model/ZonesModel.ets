@@ -112,7 +112,7 @@ const defaultList: ZonesItem[] = [
     geographyPics: [$r('app.media.ic_geography_dark_J'), $r('app.media.ic_location_j')],
     position: { x: '33.9%', y: '50%' },
     backgroundColor: $r('app.color.introduction_page_red'),
-    starLinePic: [$r('app.media.ic_star_j_dark'), $r('app.media.ic_star_j_lighter')]
+    starLinePic: [$r('app.media.ic_star_j_lighter'), $r('app.media.ic_star_j_dark')]
   },
   {
     id: 4,
@@ -133,7 +133,7 @@ const defaultList: ZonesItem[] = [
     geographyPics: [$r('app.media.ic_geography_dark_K'), $r('app.media.ic_location_k')],
     position: { x: '46.1%', y: '44.4%' },
     backgroundColor: $r('app.color.introduction_page_blue_k'),
-    starLinePic: [$r('app.media.ic_star_k_drak'), $r('app.media.ic_star_k_lighter')]
+    starLinePic: [$r('app.media.ic_star_k_lighter'), $r('app.media.ic_star_k_drak')]
   },
   {
     id: 5,
@@ -154,7 +154,7 @@ const defaultList: ZonesItem[] = [
     geographyPics: [$r('app.media.ic_geography_dark_L'), $r('app.media.ic_location_l')],
     position: { x: '46.1%', y: '44.4%' },
     backgroundColor: $r('app.color.introduction_page_red_light'),
-    starLinePic: [$r('app.media.ic_star_l_dark'), $r('app.media.ic_star_l_lighter')]
+    starLinePic: [$r('app.media.ic_star_l_lighter'), $r('app.media.ic_star_l_dark')]
   }
 ]
 

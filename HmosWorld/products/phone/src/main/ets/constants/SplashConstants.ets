@@ -15,6 +15,7 @@
 
 export class SplashConstants {
   static readonly FULL_SIZE = '100%';
+  static readonly PERCENT_67: string = '67%';
   static readonly MORNING_TIME: number = 6;
   static readonly EVENING_TIME: number = 18;
   static readonly NIGHT_TIME: number = 19;
@@ -30,6 +31,57 @@ export class SplashConstants {
   static readonly BUTTON_TEXT_OPACITY: number = 0.8;
   static readonly SPLASH_OPACITY_DURATION = 300;
   static readonly SPLASH_ICON_OPACITY_DURATION = 1000;
+  /**
+   * GridRow column sm.
+   */
+  static readonly COLUMN_SM: number = 4;
+
+  /**
+   * GridRow column md.
+   */
+  static readonly COLUMN_MD: number = 8;
+
+  /**
+   * GridRow column lg.
+   */
+  static readonly COLUMN_LG: number = 12;
+
+  /**
+   * GridCol span sm.
+   */
+
+  static readonly SPAN_SM: number = 4;
+
+  /**
+   * GridCol span md.
+   */
+
+  static readonly SPAN_MD: number = 6;
+
+  /**
+   * GridCol span lg.
+   */
+  static readonly SPAN_LG: number = 8;
+
+  /**
+   * GridCol offset sm.
+   */
+  static readonly OFFSET_SM: number = 0;
+
+  /**
+   * GridCol offset md.
+   */
+  static readonly OFFSET_MD: number = 1;
+
+  /**
+   * GridCol offset lg.
+   */
+  static readonly OFFSET_LG: number = 2;
+
+  /**
+   * safe button space.
+   */
+  static readonly SAFE_BUTTON_SPACE: number = 12;
 }
 
 export interface BgInfo {
