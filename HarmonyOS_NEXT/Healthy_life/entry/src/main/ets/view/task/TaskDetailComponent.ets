@@ -15,7 +15,7 @@
 
 
 import router from '@ohos.router';
-import prompt from '@system.prompt';
+import prompt from '@ohos.promptAction';
 import common from '@ohos.app.ability.common';
 import { ITaskItem } from '../../model/TaskInitList';
 import Logger from '../../common/utils/Logger';

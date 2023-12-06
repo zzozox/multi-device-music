@@ -16,13 +16,14 @@
 import UIAbility from '@ohos.app.ability.UIAbility'
 import CommonConstants from '../common/constants/CommonConstants';
 import Logger from '../common/utils/Logger';
-import PreferencesUtil from '../common/database/Preferencesutil';
 import Want from '@ohos.app.ability.Want';
 import AbilityConstant from '@ohos.app.ability.AbilityConstant';
 import window from '@ohos.window';
-import { GlobalContext } from '../common/utils/GlobalContext';
+import base from '@ohos.base';
+import dataPreferences from '@ohos.data.preferences';
 
 const TAG = '[entryAbility]';
+const KEY_APP_FONT_SIZE = 'appFontSize';
 
 /**
  * Lift cycle management of Ability.
@@ -30,11 +31,27 @@ const TAG = '[entryAbility]';
 export default class EntryAbility extends UIAbility {
   onCreate(want: Want, launchParam: AbilityConstant.LaunchParam) {
     Logger.info(TAG, 'onCreate');
-    GlobalContext.getContext().setObject('abilityWant', want);
-
-    PreferencesUtil.createFontPreferences(this.context);
     // 设置字体默认大小
-    PreferencesUtil.saveDefaultFontSize(CommonConstants.SET_SIZE_NORMAL);
+    try {
+      let options: dataPreferences.Options =  { name: 'myStore' };
+      let promise = dataPreferences.getPreferences(this.context, options);
+      promise.then((object: dataPreferences.Preferences) => {
+        object.has(KEY_APP_FONT_SIZE).then(async (isExist: boolean) => {
+          Logger.info(TAG, 'preferences has changeFontSize is ' + isExist);
+          if (!isExist) {
+            await object?.put(KEY_APP_FONT_SIZE, CommonConstants.SET_SIZE_NORMAL);
+            await object?.flush();
+          }
+        }).catch((err: Error) => {
+          Logger.error(TAG, 'Has the value failed with err: ' + err);
+        });
+        console.info("Succeeded in getting preferences.");
+      }).catch((err: base.BusinessError) => {
+        console.error("Failed to get preferences. code =" + err.code + ", message =" + err.message);
+      })
+    } catch (err) {
+      console.error("Failed to get preferences. code =" + err.code + ", message =" + err.message);
+    }
   }
 
   onDestroy() {

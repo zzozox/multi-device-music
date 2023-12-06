@@ -24,7 +24,7 @@ const TAG = '[EntryAbility]';
 export default class EntryAbility extends UIAbility {
   onCreate(want: Want, launchParam: AbilityConstant.LaunchParam) {
     Logger.info(TAG, 'onCreate');
-    AppStorage.SetOrCreate('abilityWant', want);
+    AppStorage.setOrCreate('abilityWant', want);
   }
 
   onWindowStageCreate(windowStage: window.WindowStage) {

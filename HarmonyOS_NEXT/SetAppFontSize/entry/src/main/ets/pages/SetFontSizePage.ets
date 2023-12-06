@@ -18,11 +18,11 @@ import TitleBarComponent from '../view/TitleBarComponent';
 import SetViewModel from '../viewmodel/SetViewModel';
 import CommonConstants from '../common/constants/CommonConstants';
 import StyleConstants from '../common/constants/StyleConstants';
-import Logger from '../common/utils/Logger';
-import PreferencesUtil from '../common/database/Preferencesutil';
 import ChatData from '../viewmodel/ChatData';
+import dataPreferences from '@ohos.data.preferences';
 
 const TAG = '[SetFontSizePage]';
+const KEY_APP_FONT_SIZE = 'appFontSize';
 
 /**
  * The SetFontSizePage is the page that sets the font size.
@@ -37,11 +37,12 @@ struct SetFontSizePage {
   @State fontSizeText: Resource = $r("app.string.set_size_normal");
 
   onPageShow() {
-    PreferencesUtil.getChangeFontSize().then((value) => {
-      this.changeFontSize = value;
-      this.fontSizeText = SetViewModel.getTextByFontSize(value);
-      Logger.info(TAG, 'Get the value of changeFontSize: ' + this.changeFontSize);
-    });
+    dataPreferences.getPreferences(getContext(this), 'myStore').then((object: dataPreferences.Preferences) => {
+      object.get(KEY_APP_FONT_SIZE, 0).then((data) => {
+        this.changeFontSize = Number(data);
+        this.fontSizeText = SetViewModel.getTextByFontSize(Number(data));
+      });
+    })
   }
 
   build() {
@@ -106,13 +107,18 @@ struct SliderLayout {
             .width(StyleConstants.SLIDER_WIDTH_PERCENT)
             .onChange(async (value: number) => {
               if (this.changeFontSize === 0) {
-                this.changeFontSize = await PreferencesUtil.getChangeFontSize();
                 this.fontSizeText = SetViewModel.getTextByFontSize(value);
                 return;
               }
               this.changeFontSize = (value === CommonConstants.SET_SLIDER_MAX ? CommonConstants.SET_SIZE_HUGE : value);
               this.fontSizeText = SetViewModel.getTextByFontSize(this.changeFontSize);
-              PreferencesUtil.saveChangeFontSize(this.changeFontSize);
+              let preferences: dataPreferences.Preferences | null = null;
+              dataPreferences.getPreferences(getContext(this), 'myStore').then((object: dataPreferences.Preferences) => {
+                preferences = object;
+                preferences.put(KEY_APP_FONT_SIZE, this.changeFontSize).then(() => {
+                  preferences?.flush();
+                });
+              })
             })
 
           Text($r('app.string.set_char_a'))

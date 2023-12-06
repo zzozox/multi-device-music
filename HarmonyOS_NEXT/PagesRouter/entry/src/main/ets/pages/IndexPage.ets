@@ -18,6 +18,12 @@ import CommonConstants from '../common/constants/CommonConstants';
 import Logger from '../common/utils/Logger';
 
 const TAG = '[IndexPage]';
+class routerParams {
+  src:string
+  constructor(str:string) {
+    this.src = str
+  }
+}
 
 /**
  * The IndexPage is the entry point of the application.
@@ -42,9 +48,7 @@ struct IndexPage {
           .onClick(() => {
             router.pushUrl({
               url: CommonConstants.SECOND_URL,
-              params: {
-                src: CommonConstants.SECOND_SRC_MSG
-              }
+              params: new routerParams(CommonConstants.SECOND_SRC_MSG)
             }).catch((error:Error) => {
               Logger.info(TAG, 'IndexPage push error' + JSON.stringify(error));
             });
