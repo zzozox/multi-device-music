@@ -135,6 +135,24 @@
     {
       "name": "reason_background",
       "value": "保持在后台运行"
+    },{
+      "name": "record_title",
+      "value": "观看记录"
+    },{
+      "name": "record_description",
+      "value": "这里记录了所有你听过的歌"
+    },{
+      "name": "record_button",
+      "value": "查看"
+    },{
+      "name": "new_title",
+      "value": "新增歌曲"
+    },{
+      "name": "new_description",
+      "value": "你可以在这里上传你自己的歌"
+    },{
+      "name": "new_button",
+      "value": "添加"
     }
   ]
 }

@@ -136,6 +136,24 @@
     {
       "name": "reason_background",
       "value": "keep background running"
+    },{
+      "name": "record_title",
+      "value": "record"
+    },{
+      "name": "record_description",
+      "value": "Here,it records all songs that you have listened"
+    },{
+      "name": "record_button",
+      "value": "check"
+    },{
+      "name": "new_title",
+      "value": "new song"
+    },{
+      "name": "new_description",
+      "value": "Here,you can add your own song"
+    },{
+      "name": "new_button",
+      "value": "add"
     }
   ]
 }

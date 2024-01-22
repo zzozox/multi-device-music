@@ -1,35 +1,33 @@
-/*
- * Copyright (c) 2023 Huawei Device Co., Ltd.
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 import router from '@ohos.router';
-import { RouterUrlConstants } from '../common/constants/RouterUrlConstants';
+import { SongItem } from '../viewmodel/SongData';
+import { SearchUtil } from '../common/utils/SearchUtil';
+import { GridConstants } from '../common/constants/GridConstants';
 import { StyleConstants } from '../common/constants/StyleConstants';
+import { BreakpointSystem, BreakpointType } from '../common/utils/BreakpointSystem';
 import { BreakpointConstants } from '../common/constants/BreakpointConstants';
 import { MediaService } from '../common/utils/MediaService';
+import { RouterUrlConstants } from '../common/constants/RouterUrlConstants';
 import { Logger } from '../common/utils/Logger';
-import { BreakpointType } from '../common/utils/BreakpointSystem';
-import { SongItem } from '../viewmodel/SongData';
-import { MusicList } from '../viewmodel/MusicListViewModel'
-import { SongDataSource } from '../viewmodel/SongDataSource';
 import { ContentConstants } from '../common/constants/ContentConstants';
+import { SongDataSource } from '../viewmodel/SongDataSource';
+import { Player } from '../components/Player';
 import { recordSong } from '../common/constants/PlayRecord';
 
+
+@Entry
 @Component
-export struct PlayList {
-  @Link currentBreakpoint: string;
-  songList: SongItem[] = MusicList;
+struct MusicSearch {
+
+  private breakpointSystem: BreakpointSystem = new BreakpointSystem();
+  @State currentBreakpoint: string = BreakpointConstants.BREAKPOINT_SM;
+  aboutToAppear() {
+    MediaService.getInstance();
+    this.breakpointSystem.register();
+  }
+  aboutToDisappear() {
+    this.breakpointSystem.unregister();
+  }
+
 
   @Builder
   PlayAll() {
@@ -68,7 +66,6 @@ export struct PlayList {
     })
     .position({ x: 0, y: 0 })
   }
-
   @Builder
   SongItem(item: SongItem, index?: number) {
     Row() {
@@ -117,38 +114,86 @@ export struct PlayList {
     .width(StyleConstants.FULL_WIDTH)
   }
 
+  param:any=router.getParams()
+  @State querryStr:string=this.param.querryStr
+  @State songList:SongItem[]=SearchUtil.SearchSongs(this.querryStr);
   build() {
-    Column() {
-      this.PlayAll()
-      List() {
-        LazyForEach(new SongDataSource(this.songList), (item: SongItem, index?: number) => {
-          ListItem() {
-            Column() {
-              this.SongItem(item, index)
+    Column(){
+      //搜索导航栏
+      Row({space:15}){
+        Image($r('app.media.ic_back'))
+          .width(30)
+          .onClick(()=>{
+            router.back()
+          })
+        Blank()
+        Blank()
+        Blank()
+        TextInput({placeholder:this.querryStr})
+          .onChange((value)=>{
+            this.querryStr=value
+          })
+          .height(40)
+          .width('50%')
+        Button('搜索')
+          .backgroundColor('#a7d5d8')
+          .height(30)
+          .onClick(()=>{
+            router.replaceUrl(
+              {
+                url:'pages/MusicSearch',
+                params:{querryStr:this.querryStr}
+              },
+              router.RouterMode.Single,
+              error=>{
+                console.log('路由错误',error.message)
+              }
+            )
+          })
+      }
+      //搜索结果歌曲
+      GridRow() {
+        GridCol({ span: { sm: GridConstants.SPAN_TWELVE, md: GridConstants.SPAN_SIX, lg: GridConstants.SPAN_EIGHT } }) {
+          Column() {
+            this.PlayAll()
+            List() {
+              LazyForEach(new SongDataSource(this.songList), (item: SongItem, index?: number) => {
+                ListItem() {
+                  Column() {
+                    this.SongItem(item, index)
+                  }
+                  .padding({
+                    left: $r('app.float.list_item_padding'),
+                    right: $r('app.float.list_item_padding')
+                  })
+                }
+              }, (item: SongItem, index?: number) => JSON.stringify(item) + index)
             }
-            .padding({
-              left: $r('app.float.list_item_padding'),
-              right: $r('app.float.list_item_padding')
+            .width(StyleConstants.FULL_WIDTH)
+            .backgroundColor(Color.White)
+            .margin({ top: $r('app.float.list_area_margin_top') })
+            .lanes(this.currentBreakpoint === BreakpointConstants.BREAKPOINT_LG ?
+            ContentConstants.COL_TWO : ContentConstants.COL_ONE)
+            .layoutWeight(1)
+            .divider({
+              color: $r('app.color.list_divider'),
+              strokeWidth: $r('app.float.stroke_width'),
+              startMargin: $r('app.float.list_item_padding'),
+              endMargin: $r('app.float.list_item_padding')
             })
           }
-        }, (item: SongItem, index?: number) => JSON.stringify(item) + index)
+          .padding({
+            top: this.currentBreakpoint === BreakpointConstants.BREAKPOINT_SM ? 0 : $r('app.float.list_area_padding_top'),
+            bottom: $r('app.float.list_area_padding_bottom')
+          })
+        }
+        .borderRadius($r('app.float.playlist_border_radius'))
       }
-      .width(StyleConstants.FULL_WIDTH)
-      .backgroundColor(Color.White)
-      .margin({ top: $r('app.float.list_area_margin_top') })
-      .lanes(this.currentBreakpoint === BreakpointConstants.BREAKPOINT_LG ?
-        ContentConstants.COL_TWO : ContentConstants.COL_ONE)
-      .layoutWeight(1)
-      .divider({
-        color: $r('app.color.list_divider'),
-        strokeWidth: $r('app.float.stroke_width'),
-        startMargin: $r('app.float.list_item_padding'),
-        endMargin: $r('app.float.list_item_padding')
+      .height(StyleConstants.FULL_HEIGHT)
+      .onBreakpointChange((breakpoints: string) => {
+        this.currentBreakpoint = breakpoints;
       })
+      Player({ currentBreakpoint: $currentBreakpoint })
     }
-    .padding({
-      top: this.currentBreakpoint === BreakpointConstants.BREAKPOINT_SM ? 0 : $r('app.float.list_area_padding_top'),
-      bottom: $r('app.float.list_area_padding_bottom')
-    })
   }
 }

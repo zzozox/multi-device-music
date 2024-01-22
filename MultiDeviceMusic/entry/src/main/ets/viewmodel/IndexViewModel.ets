@@ -26,12 +26,30 @@ class IndexViewModel {
    */
   getIndexItemList(): IndexItem[] {
     let IndexItemList: IndexItem[] = [];
-    IndexItemList.push(new IndexItem($r('app.string.music_title'), $r('app.string.music_description'),
-      $r('app.string.button_music'), $r('app.media.ic_music'),
+    IndexItemList.push(new IndexItem(
+      $r('app.string.music_title'),
+      $r('app.string.music_description'),
+      $r('app.string.button_music'),
+      $r('app.media.ic_music'),
       'pages/MusicList'));
-    IndexItemList.push(new IndexItem($r('app.string.live_title'), $r('app.string.live_description'),
-      $r('app.string.button_live'), $r('app.media.ic_live'),
+    IndexItemList.push(new IndexItem(
+      $r('app.string.live_title'),
+      $r('app.string.live_description'),
+      $r('app.string.button_live'),
+      $r('app.media.ic_live'),
       'pages/Live'));
+    IndexItemList.push(new IndexItem(
+      $r('app.string.record_title'),
+      $r('app.string.record_description'),
+      $r('app.string.record_button'),
+      $r('app.media.ic_music')
+      ,'pages/PlayRecord'));
+    IndexItemList.push(new IndexItem(
+      $r('app.string.new_title'),
+      $r('app.string.new_description'),
+      $r('app.string.new_button'),
+      $r('app.media.ic_live'),
+      'pages/AddSong'))
     return IndexItemList;
   }
 }

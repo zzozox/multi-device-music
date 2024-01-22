@@ -4,6 +4,11 @@
     "pages/Live",
     "pages/MusicComment",
     "pages/MusicList",
-    "pages/PlayPage"
+    "pages/PlayPage",
+    "pages/MusicSearch",
+    "pages/MyInfo",
+    "pages/EditMyInfo",
+    "pages/PlayRecord",
+    "pages/AddSong"
   ]
 }
